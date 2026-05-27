@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
-const BACKEND_URL = 'http://192.168.11.16:8080'
+const BACKEND_URL = 'https://extracellular-unbarren-ima.ngrok-free.dev'
 
 export default defineConfig({
   plugins: [tailwindcss(), react()],
