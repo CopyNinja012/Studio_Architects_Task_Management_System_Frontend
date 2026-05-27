@@ -217,62 +217,68 @@ export default function TaskWBS() {
     <div className="space-y-6 animate-fade-in">
       <Card padding="none" className="border border-surface-border shadow-sm overflow-visible bg-transparent">
         
-        {/* ── Toolbar (Outside overflow-hidden wrapper) ────────────────────────── */}
-        <div className="flex items-center gap-2.5 px-4 py-3 border-b border-surface-border bg-white relative z-40 overflow-visible rounded-t-2xl">
-          <div className="relative shrink-0 w-48">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
-            <input
-              value={search}
-              onChange={e => { setSearch(e.target.value); setPage(1) }}
-              placeholder="Search tasks…"
-              className="w-full pl-9 pr-3 h-8 text-[12px] border border-surface-border rounded-lg bg-white
-                         focus:outline-none focus:border-primary-olive focus:ring-2 focus:ring-primary-olive/10
-                         transition-all font-medium placeholder:text-text-light"
-            />
+        {/* ── Toolbar ────────────────────────────────────────────────────────── */}
+        <div className="flex flex-col xl:flex-row xl:items-center gap-4 px-4 py-4 xl:py-3 border-b border-surface-border bg-white relative z-40 rounded-t-2xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1">
+            <div className="relative shrink-0 w-full sm:w-48">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
+              <input
+                value={search}
+                onChange={e => { setSearch(e.target.value); setPage(1) }}
+                placeholder="Search tasks…"
+                className="w-full pl-9 pr-3 h-8 text-[12px] border border-surface-border rounded-lg bg-white
+                           focus:outline-none focus:border-primary-olive focus:ring-2 focus:ring-primary-olive/10
+                           transition-all font-medium placeholder:text-text-light"
+              />
+            </div>
+
+            <div className="hidden sm:block h-6 w-px bg-surface-border shrink-0" />
+
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-2.5">
+              <div className="shrink-0 w-full sm:w-36">
+                <Dropdown
+                  options={[{ value: '', label: 'All Status' }, ...TASK_STATUSES]}
+                  value={statusFilter}
+                  onChange={v => { setStatusFilter(v); setPage(1) }}
+                  placeholder="All Status"
+                />
+              </div>
+
+              <div className="shrink-0 w-full sm:w-36">
+                <Dropdown
+                  options={[{ value: '', label: 'All Priority' }, ...PRIORITIES]}
+                  value={priorityFilter}
+                  onChange={v => { setPriorityFilter(v); setPage(1) }}
+                  placeholder="All Priority"
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="h-6 w-px bg-surface-border shrink-0" />
+          <div className="flex items-center justify-between xl:justify-end gap-3 shrink-0">
+            {(search || statusFilter || priorityFilter) && (
+              <button
+                onClick={() => { setSearch(''); setStatusFilter(''); setPriorityFilter(''); setPage(1) }}
+                className="flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-7 rounded-lg hover:bg-red-50 transition-colors"
+              >
+                <X size={12} /> Clear
+              </button>
+            )}
 
-          <div className="shrink-0 w-36">
-            <Dropdown
-              options={[{ value: '', label: 'All Status' }, ...TASK_STATUSES]}
-              value={statusFilter}
-              onChange={v => { setStatusFilter(v); setPage(1) }}
-              placeholder="All Status"
-            />
+            <div className="flex items-center gap-4">
+              <span className="hidden sm:inline shrink-0 text-[11px] font-medium text-text-light">
+                {totalElements} task{totalElements !== 1 ? 's' : ''}
+              </span>
+
+              <Button
+                icon={<Plus size={14} />}
+                onClick={() => setCreateOpen(true)}
+                className="h-8 text-[12px] px-3"
+              >
+                Add Task
+              </Button>
+            </div>
           </div>
-
-          <div className="shrink-0 w-36">
-            <Dropdown
-              options={[{ value: '', label: 'All Priority' }, ...PRIORITIES]}
-              value={priorityFilter}
-              onChange={v => { setPriorityFilter(v); setPage(1) }}
-              placeholder="All Priority"
-            />
-          </div>
-
-          {(search || statusFilter || priorityFilter) && (
-            <button
-              onClick={() => { setSearch(''); setStatusFilter(''); setPriorityFilter(''); setPage(1) }}
-              className="shrink-0 flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-7 rounded-lg hover:bg-red-50 transition-colors"
-            >
-              <X size={12} /> Clear
-            </button>
-          )}
-
-          <div className="flex-1" />
-
-          <span className="shrink-0 text-[11px] font-medium text-text-light mr-4">
-            {totalElements} task{totalElements !== 1 ? 's' : ''}
-          </span>
-
-          <Button
-            icon={<Plus size={14} />}
-            onClick={() => setCreateOpen(true)}
-            className="shrink-0 h-8 text-[12px] px-3"
-          >
-            Add Task
-          </Button>
         </div>
 
         {/* ── Table & Pagination Wrapper (Clipped) ──────────────────────────────── */}

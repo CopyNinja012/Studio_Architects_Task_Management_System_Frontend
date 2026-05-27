@@ -104,11 +104,11 @@ export default function Login() {
       <div className="relative z-20 w-full max-w-[480px] px-6 flex flex-col items-center animate-fade-in">
         
         {/* Login Card */}
-        <div className="w-full bg-white/95 backdrop-blur-2xl rounded-[28px] shadow-[0_32px_80px_rgba(0,0,0,0.25)] border border-white/30 overflow-hidden p-10 flex flex-col items-center">
+        <div className="w-full bg-white/95 backdrop-blur-2xl rounded-2xl md:rounded-[28px] shadow-[0_32px_80px_rgba(0,0,0,0.25)] border border-white/30 overflow-hidden p-6 md:p-10 flex flex-col items-center">
           
           <SALogo />
 
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 md:mb-8">
             <h1 className="text-2xl font-black text-[#1A1F14] tracking-tight">Studio Architects</h1>
             <p className="text-[#40521B]/60 text-[13px] mt-1 font-bold uppercase tracking-widest">Enterprise Access</p>
           </div>

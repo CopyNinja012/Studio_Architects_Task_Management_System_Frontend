@@ -44,19 +44,19 @@ function StatCard({ title, value, subtitle, trend, accentColor, gradientFrom, gr
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
         style={{ background: `linear-gradient(135deg, ${gradientFrom}05 0%, ${gradientTo}02 100%)` }} />
       
-      <div className="relative px-5 pt-6 pb-5">
+      <div className="relative p-5 md:p-6">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0 pt-1">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-light mb-2.5">{title}</p>
-            <p className="text-[2.6rem] font-black tracking-tighter leading-none" style={{ color: gradientFrom }}>{value}</p>
+            <p className="text-3xl md:text-[2.6rem] font-black tracking-tighter leading-none" style={{ color: gradientFrom }}>{value}</p>
           </div>
           
-          <div className="shrink-0 w-18 h-18 flex items-center justify-center pointer-events-none relative">
+          <div className="shrink-0 w-14 h-14 md:w-18 md:h-18 flex items-center justify-center pointer-events-none relative">
             <img 
               src={image} 
               alt={imageAlt}
               className={cn(
-                "w-16 h-16 object-contain transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) brightness-110 saturate-110",
+                "w-12 h-12 md:w-16 md:h-16 object-contain transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) brightness-110 saturate-110",
                 "opacity-100 scale-110 group-hover:scale-150 group-hover:-translate-y-3 group-hover:rotate-6",
                 "drop-shadow-[0_15px_20px_rgba(0,0,0,0.1)] group-hover:drop-shadow-[0_30px_45px_rgba(0,0,0,0.25)]"
               )} 
@@ -247,15 +247,15 @@ export default function HRDashboard() {
 
       <Card className="border-none bg-teal-50 shadow-sm overflow-hidden relative">
         <div className="absolute right-0 top-0 w-32 h-32 bg-teal-100/50 rounded-full -mr-16 -mt-16" />
-        <div className="flex items-center gap-5 p-3 relative z-10">
-          <div className="w-14 h-14 rounded-2xl bg-teal-600 flex items-center justify-center shrink-0 shadow-lg shadow-teal-200">
+        <div className="flex flex-col md:flex-row items-center gap-5 p-6 md:p-8 relative z-10 text-center md:text-left">
+          <div className="w-14 h-14 rounded-2xl bg-teal-600 flex items-center justify-center shrink-0 shadow-lg shadow-teal-200 group-hover:scale-105 transition-transform duration-500">
             <AlertCircle size={28} className="text-white" />
           </div>
           <div className="flex-1">
             <h3 className="text-[15px] font-black text-teal-900">Upcoming Contract Renewals</h3>
             <p className="text-[12px] text-teal-700/80 mt-1 font-medium">3 employee contracts expire within the next 30 days. Action is required for visa processing.</p>
           </div>
-          <button className="px-5 h-10 rounded-xl bg-teal-700 text-white text-[12px] font-black uppercase shadow-lg shadow-teal-200 hover:bg-teal-800 transition-colors">
+          <button className="w-full md:w-auto px-8 h-12 rounded-xl bg-teal-700 text-white text-[12px] font-black uppercase shadow-lg shadow-teal-200 hover:bg-teal-800 transition-all hover:-translate-y-0.5">
             Review Contracts
           </button>
         </div>

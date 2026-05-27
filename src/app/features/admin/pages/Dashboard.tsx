@@ -148,24 +148,24 @@ function StatCard({
       onClick={() => navigate(href)}
       className="flex flex-col group h-full relative overflow-hidden transition-all duration-500 hover:shadow-premium-hover hover:-translate-y-1.5"
     >
-      <div className="p-6 flex flex-col h-full relative z-10">
+      <div className="p-5 md:p-6 flex flex-col h-full relative z-10">
         <div className="flex items-start justify-between mb-5">
           <div className="space-y-2">
             <p className="text-[10px] font-black text-text-light tracking-[0.2em] uppercase">
               {title}
             </p>
-            <h3 className="text-4xl font-black text-[#111827] tracking-tighter transition-all duration-500 group-hover:translate-x-1">
+            <h3 className="text-3xl md:text-4xl font-black text-[#111827] tracking-tighter transition-all duration-500 group-hover:translate-x-1">
               {value}
             </h3>
           </div>
           
           {/* Enhanced 3D Icon - Reactive Hover */}
-          <div className="relative w-18 h-18 flex items-center justify-center pointer-events-none">
+          <div className="relative w-14 h-14 md:w-18 md:h-18 flex items-center justify-center pointer-events-none">
             <img 
               src={image} 
               alt={title} 
               className={cn(
-                "w-16 h-16 object-contain transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) brightness-125 saturate-110",
+                "w-12 h-12 md:w-16 md:h-16 object-contain transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) brightness-125 saturate-110",
                 "opacity-100 scale-110 group-hover:scale-150 group-hover:-translate-y-3 group-hover:rotate-6",
                 "drop-shadow-[0_15px_20px_rgba(0,0,0,0.1)] group-hover:drop-shadow-[0_30px_45px_rgba(0,0,0,0.25)]"
               )} 
@@ -695,11 +695,12 @@ export default function Dashboard() {
 
       {/* Approvals Banner */}
       {derived.submittedTasks.length > 0 && (
-        <div className="mt-10 rounded-4xl bg-[#F8FAF5] border border-[#E5E7EB] p-8 flex flex-col md:flex-row items-center gap-10 shadow-sm relative overflow-hidden group">
+        <div className="mt-10 rounded-3xl md:rounded-4xl bg-[#F8FAF5] border border-[#E5E7EB] p-6 md:p-10 flex flex-col md:flex-row items-center gap-6 md:gap-10 shadow-sm relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#6B7F3A]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           
-          <div className="w-24 h-24 rounded-4xl bg-white border border-[#E5E7EB] flex items-center justify-center shrink-0 shadow-soft group-hover:scale-105 transition-transform duration-500">
-            <AlertCircle size={44} className="text-[#D97706]" />
+          <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl md:rounded-4xl bg-white border border-[#E5E7EB] flex items-center justify-center shrink-0 shadow-soft group-hover:scale-105 transition-transform duration-500">
+            <AlertCircle size={36} className="text-[#D97706] md:hidden" />
+            <AlertCircle size={44} className="text-[#D97706] hidden md:block" />
           </div>
 
           <div className="flex-1 text-center md:text-left relative z-10">
@@ -708,21 +709,22 @@ export default function Dashboard() {
                 ATTENTION REQUIRED
               </span>
             </div>
-            <h3 className="text-2xl font-black text-[#111827] mb-2 tracking-tight">Pending Approvals</h3>
-            <p className="text-[13px] text-[#6B7280] font-semibold max-w-xl leading-relaxed">
+            <h3 className="text-xl md:text-2xl font-black text-[#111827] mb-2 tracking-tight">Pending Approvals</h3>
+            <p className="text-xs md:text-[13px] text-[#6B7280] font-semibold max-w-xl leading-relaxed">
               There are <span className="text-[#111827] font-black underline decoration-[#D97706]/30">{derived.submittedTasks.length} tasks</span> awaiting your professional review. Keep the momentum going.
             </p>
             
             <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-2.5">
               {derived.submittedTasks.slice(0, 3).map(task => (
-                <div key={task.id} className="px-4 py-2 bg-white rounded-2xl border border-[#E5E7EB] flex items-center gap-2 shadow-sm group-hover:border-[#6B7F3A]/30 transition-colors">
-                  <Zap size={14} className="text-[#D97706]" />
-                  <span className="text-[11px] font-black text-[#111827]">{task.title}</span>
+                <div key={task.id} className="px-3 md:px-4 py-1.5 md:py-2 bg-white rounded-xl md:rounded-2xl border border-[#E5E7EB] flex items-center gap-2 shadow-sm group-hover:border-[#6B7F3A]/30 transition-colors">
+                  <Zap size={12} className="text-[#D97706] md:hidden" />
+                  <Zap size={14} className="text-[#D97706] hidden md:block" />
+                  <span className="text-[10px] md:text-[11px] font-black text-[#111827]">{task.title}</span>
                 </div>
               ))}
               {derived.submittedTasks.length > 3 && (
-                <div className="px-4 py-2 bg-[#F3F5EE] rounded-2xl border border-transparent flex items-center justify-center">
-                  <span className="text-[10px] font-black text-[#6B7F3A]">+{derived.submittedTasks.length - 3} OTHERS</span>
+                <div className="px-3 md:px-4 py-1.5 md:py-2 bg-[#F3F5EE] rounded-xl md:rounded-2xl border border-transparent flex items-center justify-center">
+                  <span className="text-[9px] md:text-[10px] font-black text-[#6B7F3A]">+{derived.submittedTasks.length - 3} OTHERS</span>
                 </div>
               )}
             </div>
@@ -730,7 +732,7 @@ export default function Dashboard() {
 
           <Link
             to={PATHS.ADMIN_APPROVALS}
-            className="px-10 py-4 rounded-2xl bg-[#111827] text-white text-[13px] font-black shadow-xl shadow-[#111827]/10 hover:shadow-2xl hover:bg-[#6B7F3A] transition-all duration-500 hover:-translate-y-1 relative z-10"
+            className="w-full md:w-auto text-center px-8 md:px-10 py-3.5 md:py-4 rounded-xl md:rounded-2xl bg-[#111827] text-white text-xs md:text-[13px] font-black shadow-xl shadow-[#111827]/10 hover:shadow-2xl hover:bg-[#6B7F3A] transition-all duration-500 hover:-translate-y-1 relative z-10"
           >
             REVIEW ALL
           </Link>

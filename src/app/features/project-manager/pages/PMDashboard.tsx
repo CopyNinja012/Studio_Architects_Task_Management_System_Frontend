@@ -30,20 +30,20 @@ function StatCard({ title, value, subtitle, accentColor, gradientFrom, gradientT
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
         style={{ background: `linear-gradient(135deg, ${gradientFrom}05 0%, ${gradientTo}02 100%)` }} />
       
-      <div className="relative px-5 pt-6 pb-5">
+      <div className="relative p-5 md:p-6">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0 pt-1">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-light mb-2.5">{title}</p>
-            <p className="text-[2.6rem] font-black tracking-tighter leading-none" style={{ color: gradientFrom }}>{value}</p>
+            <p className="text-3xl md:text-[2.6rem] font-black tracking-tighter leading-none" style={{ color: gradientFrom }}>{value}</p>
           </div>
           
           {/* Enhanced 3D Icon - Reactive Hover */}
-          <div className="shrink-0 w-18 h-18 flex items-center justify-center pointer-events-none relative">
+          <div className="shrink-0 w-14 h-14 md:w-18 md:h-18 flex items-center justify-center pointer-events-none relative">
             <img 
               src={image} 
               alt={imageAlt}
               className={cn(
-                "w-16 h-16 object-contain transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) brightness-110 saturate-110",
+                "w-12 h-12 md:w-16 md:h-16 object-contain transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) brightness-110 saturate-110",
                 "opacity-100 scale-110 group-hover:scale-150 group-hover:-translate-y-3 group-hover:rotate-6",
                 "drop-shadow-[0_15px_20px_rgba(0,0,0,0.1)] group-hover:drop-shadow-[0_30px_45px_rgba(0,0,0,0.25)]"
               )} 

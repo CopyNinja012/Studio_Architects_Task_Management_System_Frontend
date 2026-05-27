@@ -77,19 +77,19 @@ export default function ProjectFormPage() {
 
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-3xl shadow-sm border border-surface-border overflow-hidden">
-          <div className="p-8 border-b border-surface-border bg-surface-hover/30">
+          <div className="p-6 md:p-8 border-b border-surface-border bg-surface-hover/30">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary-olive flex items-center justify-center text-white shadow-lg">
                 <FolderKanban size={24} />
               </div>
               <div>
-                <h1 className="text-2xl font-black text-text-dark tracking-tight">Create New Project</h1>
-                <p className="text-sm font-medium text-text-light mt-1">Initialize a new project and assign leads</p>
+                <h1 className="text-xl md:text-2xl font-black text-text-dark tracking-tight">Create New Project</h1>
+                <p className="text-xs md:text-sm font-medium text-text-light mt-1">Initialize a new project and assign leads</p>
               </div>
             </div>
           </div>
 
-          <div className="p-8">
+          <div className="p-6 md:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input label="Project Name" required placeholder="e.g. Sahyadri Heights"

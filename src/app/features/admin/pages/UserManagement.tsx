@@ -143,70 +143,79 @@ export default function UserManagement() {
     <div className="space-y-6 animate-fade-in">
       <Card padding="none" className="border border-surface-border shadow-sm overflow-visible bg-transparent">
         
-        {/* ── Toolbar (Outside overflow-hidden wrapper) ────────────────────────── */}
-        <div className="flex items-center gap-2.5 px-4 py-3 border-b border-surface-border bg-white relative z-30 overflow-visible rounded-t-2xl">
-          <div className="relative shrink-0 w-52">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
-            <input 
-              value={search} 
-              onChange={e => setSearch(e.target.value)} 
-              placeholder="Search users…" 
-              className="w-full pl-9 pr-3 h-8 text-[12px] border border-surface-border rounded-lg bg-white focus:outline-none focus:border-[#40521B] focus:ring-2 focus:ring-[#40521B]/10 transition-all font-medium placeholder:text-text-light" 
-            />
+        {/* ── Toolbar ────────────────────────────────────────────────────────── */}
+        <div className="flex flex-col md:flex-row md:items-center gap-4 px-4 py-4 md:py-3 border-b border-surface-border bg-white relative z-30 rounded-t-2xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1">
+            <div className="relative shrink-0 w-full sm:w-52">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
+              <input 
+                value={search} 
+                onChange={e => setSearch(e.target.value)} 
+                placeholder="Search users…" 
+                className="w-full pl-9 pr-3 h-8 text-[12px] border border-surface-border rounded-lg bg-white focus:outline-none focus:border-[#40521B] focus:ring-2 focus:ring-[#40521B]/10 transition-all font-medium placeholder:text-text-light" 
+              />
+            </div>
+            
+            <div className="hidden sm:block h-6 w-px bg-surface-border shrink-0" />
+            
+            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+              {([
+                { value: 'all', label: 'All' }, 
+                { value: 'active', label: 'Active' }, 
+                { value: 'inactive', label: 'Inactive' }
+              ] as const).map(pill => (
+                <button 
+                  key={pill.value} 
+                  onClick={() => setStatusFilter(pill.value)} 
+                  className={cn(
+                    'flex items-center gap-1 px-2.5 h-7 rounded-full text-[11px] font-bold border transition-all whitespace-nowrap', 
+                    statusFilter === pill.value 
+                      ? 'bg-[#40521B] text-white border-[#40521B]' 
+                      : 'bg-white text-text-light border-surface-border hover:border-[#E9EDDF] hover:text-[#40521B]'
+                  )}
+                >
+                  {pill.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="hidden sm:block h-6 w-px bg-surface-border shrink-0" />
+            
+            <div className="w-full sm:w-40">
+              <Dropdown 
+                options={[
+                  { value: 'all', label: 'All Roles' }, 
+                  ...Object.entries(ROLE_LABEL).map(([v, l]) => ({ value: v, label: l }))
+                ]} 
+                value={roleFilter} 
+                onChange={v => setRoleFilter(v)} 
+                placeholder="Role" 
+              />
+            </div>
           </div>
-          <div className="h-6 w-px bg-surface-border shrink-0" />
-          <div className="flex items-center gap-1 shrink-0">
-            {([
-              { value: 'all', label: 'All' }, 
-              { value: 'active', label: 'Active' }, 
-              { value: 'inactive', label: 'Inactive' }
-            ] as const).map(pill => (
+
+          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+            {(search || statusFilter !== 'all' || roleFilter !== 'all') && (
               <button 
-                key={pill.value} 
-                onClick={() => setStatusFilter(pill.value)} 
-                className={cn(
-                  'flex items-center gap-1 px-2.5 h-7 rounded-full text-[11px] font-bold border transition-all whitespace-nowrap', 
-                  statusFilter === pill.value 
-                    ? 'bg-[#40521B] text-white border-[#40521B]' 
-                    : 'bg-white text-text-light border-surface-border hover:border-[#E9EDDF] hover:text-[#40521B]'
-                )}
+                onClick={() => { 
+                  setSearch('')
+                  setStatusFilter('all')
+                  setRoleFilter('all') 
+                }} 
+                className="flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-7 rounded-lg hover:bg-red-50 transition-colors"
               >
-                {pill.label}
+                <X size={12} /> Clear
               </button>
-            ))}
-          </div>
-          <div className="h-6 w-px bg-surface-border shrink-0" />
-          <div className="shrink-0 w-40">
-            <Dropdown 
-              options={[
-                { value: 'all', label: 'All Roles' }, 
-                ...Object.entries(ROLE_LABEL).map(([v, l]) => ({ value: v, label: l }))
-              ]} 
-              value={roleFilter} 
-              onChange={v => setRoleFilter(v)} 
-              placeholder="Role" 
-            />
-          </div>
-          {(search || statusFilter !== 'all' || roleFilter !== 'all') && (
-            <button 
-              onClick={() => { 
-                setSearch('')
-                setStatusFilter('all')
-                setRoleFilter('all') 
-              }} 
-              className="shrink-0 flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-7 rounded-lg hover:bg-red-50 transition-colors"
+            )}
+            
+            <Button 
+              onClick={() => setAddOpen(true)} 
+              icon={<UserPlus size={14} />} 
+              className="h-8 text-[12px] px-3"
             >
-              <X size={12} /> Clear
-            </button>
-          )}
-          <div className="flex-1" />
-          <Button 
-            onClick={() => setAddOpen(true)} 
-            icon={<UserPlus size={14} />} 
-            className="shrink-0 h-8 text-[12px] px-3"
-          >
-            Add Staff
-          </Button>
+              Add Staff
+            </Button>
+          </div>
         </div>
 
         {/* ── Table & Pagination Wrapper (Clipped) ──────────────────────────────── */}

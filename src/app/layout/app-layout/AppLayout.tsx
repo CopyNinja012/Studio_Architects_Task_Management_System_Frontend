@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 import { useUIStore } from '@/store'
+import { cn } from '@/shared/lib/cn'
 
 export function AppLayout() {
   const { sidebarCollapsed } = useUIStore()
@@ -25,16 +26,17 @@ export function AppLayout() {
 
       {/* Main content is the only scroll container */}
       <main
-        className="fixed z-10 overflow-y-auto transition-all duration-300 ease-in-out"
+        className={cn(
+          "fixed z-10 overflow-y-auto transition-all duration-300 ease-in-out",
+          "left-0 lg:left-[var(--app-sidebar-w)]",
+          "right-0 bottom-0"
+        )}
         style={{
           top: 'var(--app-header-h)',
-          left: 'var(--app-sidebar-w)',
-          right: 0,
-          bottom: 0,
-          padding: 'var(--app-gutter)',
+          // Padding is smaller on mobile
         }}
       >
-        <div className="mx-auto w-full max-w-400">
+        <div className="mx-auto w-full max-w-400 p-4 md:p-8">
           <Outlet />
         </div>
       </main>

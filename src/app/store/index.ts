@@ -44,12 +44,18 @@ export const useAuthStore = create<AuthState>()(
 
 interface UIState {
   sidebarCollapsed: boolean
+  mobileSidebarOpen: boolean
   toggleSidebar: () => void
   setSidebarCollapsed: (collapsed: boolean) => void
+  toggleMobileSidebar: () => void
+  setMobileSidebarOpen: (open: boolean) => void
 }
 
 export const useUIStore = create<UIState>((set) => ({
   sidebarCollapsed: false,
+  mobileSidebarOpen: false,
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+  toggleMobileSidebar: () => set((s) => ({ mobileSidebarOpen: !s.mobileSidebarOpen })),
+  setMobileSidebarOpen: (open) => set({ mobileSidebarOpen: open }),
 }))

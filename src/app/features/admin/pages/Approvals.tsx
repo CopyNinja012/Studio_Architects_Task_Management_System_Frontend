@@ -158,10 +158,10 @@ export default function Approvals() {
       <Card padding="none" className="border border-surface-border shadow-sm overflow-visible bg-transparent">
         
         {/* ── Toolbar ────────────────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between gap-4 px-4 py-3 border-b border-surface-border bg-white overflow-x-auto no-scrollbar rounded-t-2xl relative z-30">
-          <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 px-4 py-4 lg:py-3 border-b border-surface-border bg-white rounded-t-2xl relative z-30">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-1 min-w-0">
             {/* Search */}
-            <div className="relative shrink-0 w-52">
+            <div className="relative shrink-0 w-full sm:w-52">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
               <input 
                 value={search} 
@@ -171,12 +171,12 @@ export default function Approvals() {
               />
             </div>
 
-            <div className="h-6 w-px bg-surface-border hidden md:block" />
+            <div className="hidden sm:block h-6 w-px bg-surface-border" />
 
             {/* Status Pills */}
             <div className="flex items-center gap-1.5 p-1 bg-[#F3F4F6] rounded-xl border border-[#E5E7EB] overflow-x-auto no-scrollbar max-w-full">
               {([
-                { value: 'UNDER_REVIEW',     label: 'Pending Review' },
+                { value: 'UNDER_REVIEW',     label: 'Pending' },
                 { value: 'COMPLETED',        label: 'Approved'        },
                 { value: 'REWORK_REQUESTED', label: 'Rework'          },
               ] as const).map((s) => (
@@ -199,11 +199,11 @@ export default function Approvals() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 ml-4">
+          <div className="flex items-center justify-between lg:justify-end gap-3 shrink-0">
             {search && (
               <button 
                 onClick={() => { setSearch(''); setPage(1) }} 
-                className="shrink-0 flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-8 rounded-lg hover:bg-red-50 transition-colors"
+                className="flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-8 rounded-lg hover:bg-red-50 transition-colors"
               >
                 <X size={12} />
               </button>

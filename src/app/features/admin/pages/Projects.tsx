@@ -350,14 +350,14 @@ export default function Projects() {
       <Card padding="none" className="border border-surface-border shadow-sm overflow-visible bg-transparent">
         
         {/* ── Toolbar ────────────────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between gap-4 px-4 py-3 border-b border-surface-border bg-white rounded-t-2xl relative z-30">
-          <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 px-4 py-4 lg:py-3 border-b border-surface-border bg-white rounded-t-2xl relative z-30">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 flex-1 min-w-0">
             {/* Search */}
-            <div className="relative shrink-0 w-52">
+            <div className="relative shrink-0 w-full md:w-64">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search projects…"
-                className="w-full pl-9 pr-3 h-9 text-[12px] border border-surface-border rounded-xl bg-[#F9FAFB]
+                className="w-full pl-9 pr-3 h-10 md:h-9 text-[12px] border border-surface-border rounded-xl bg-[#F9FAFB]
                            focus:outline-none focus:border-primary-olive focus:ring-4 focus:ring-primary-olive/5
                            transition-all font-medium placeholder:text-text-light" />
             </div>
@@ -384,22 +384,24 @@ export default function Projects() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0 ml-4">
-            <div className="shrink-0 w-32 hidden sm:block">
+          <div className="flex items-center gap-3 shrink-0 w-full lg:w-auto justify-between lg:justify-end">
+            <div className="shrink-0 w-32 sm:w-40">
               <Dropdown options={[{ value: '', label: 'All Types' }, ...PROJECT_TYPES]} value={typeFilter}
                 onChange={v => { setTypeFilter(v as ProjectType | ''); setPage(1) }} placeholder="Type" />
             </div>
             
-            {hasFilters && (
-              <button onClick={() => { setSearch(''); setStatusFilter(''); setTypeFilter(''); setPage(1) }}
-                className="shrink-0 flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-8 rounded-lg hover:bg-red-50 transition-colors">
-                <X size={12} />
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {hasFilters && (
+                <button onClick={() => { setSearch(''); setStatusFilter(''); setTypeFilter(''); setPage(1) }}
+                  className="shrink-0 flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-9 md:h-8 rounded-lg hover:bg-red-50 transition-colors">
+                  <X size={12} />
+                </button>
+              )}
 
-            <Button icon={<Plus size={14} />} onClick={() => setCreateOpen(true)} className="shrink-0 h-9 text-[11px] px-4 rounded-xl font-black uppercase tracking-widest bg-primary-olive shadow-lg shadow-primary-olive/10">
-              New Project
-            </Button>
+              <Button icon={<Plus size={14} />} onClick={() => setCreateOpen(true)} className="shrink-0 h-10 md:h-9 text-[11px] px-4 md:px-5 rounded-xl font-black uppercase tracking-widest bg-primary-olive shadow-lg shadow-primary-olive/10">
+                New Project
+              </Button>
+            </div>
           </div>
         </div>
 

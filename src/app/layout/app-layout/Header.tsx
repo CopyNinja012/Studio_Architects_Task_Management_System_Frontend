@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Calendar, Command, Search } from 'lucide-react'
+import { Calendar, Command, Search, Menu, X } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 import { useUIStore } from '@/store'
 import { PATHS } from '@/router/path'
@@ -50,7 +50,7 @@ export function Header() {
   const [searchFocused, setSearchFocused] = useState(false)
   const location = useLocation()
   const meta = pageMeta[location.pathname] || { title: 'Studio Architects', subtitle: 'SYSTEM PORTAL' }
-  const { sidebarCollapsed } = useUIStore()
+  const { sidebarCollapsed, mobileSidebarOpen, toggleMobileSidebar } = useUIStore()
 
   const [time, setTime] = useState(new Date())
   useEffect(() => {
@@ -64,20 +64,28 @@ export function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E5E7EB] shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center justify-between px-6"
+      className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#E5E7EB] shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center justify-between px-4 md:px-6"
       style={{ height: 'var(--app-header-h, 72px)' }}
     >
       {/* LEFT: Logo (corner) + Title */}
       <div className="flex items-center h-full">
+        {/* Mobile Toggle */}
+        <button
+          onClick={toggleMobileSidebar}
+          className="lg:hidden p-2 mr-2 rounded-xl bg-[#F8FAF5] border border-[#E5E7EB] text-[#6B7F3A]"
+        >
+          {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
         {/* Logo at the corner (no subtext) */}
-        <div className={cn('shrink-0 flex items-center', sidebarCollapsed ? 'pr-3' : 'pr-4')}>
+        <div className={cn('shrink-0 flex items-center', sidebarCollapsed ? 'pr-2 md:pr-3' : 'pr-2 md:pr-4')}>
           <img
             src={logoImg}
             alt="Studio Architects"
             className={cn(
               'w-auto object-contain',
-              // Increased size but still fits nicely in a 72px header
-              sidebarCollapsed ? 'h-11' : 'h-12',
+              // Responsive height
+              'h-9 md:h-11 lg:h-12',
               // Shadow + subtle hover polish
               'drop-shadow-[0_6px_14px_rgba(0,0,0,0.18)]',
               'transition-transform duration-300 hover:scale-[1.03]'
@@ -86,21 +94,21 @@ export function Header() {
         </div>
 
         {/* Divider */}
-        <div className="w-px h-9 bg-[#E5E7EB] mx-5" />
+        <div className="hidden sm:block w-px h-9 bg-[#E5E7EB] mx-3 md:mx-5" />
 
         {/* Page Title */}
-        <div className="flex flex-col justify-center">
-          <p className="text-[9px] font-black text-[#6B7F3A] tracking-[0.2em] uppercase mb-0.5 leading-none">
+        <div className="hidden sm:flex flex-col justify-center">
+          <p className="text-[8px] md:text-[9px] font-black text-[#6B7F3A] tracking-[0.2em] uppercase mb-0.5 leading-none">
             {meta.subtitle}
           </p>
-          <h2 className="text-[20px] font-black text-[#111827] tracking-tight leading-none">
+          <h2 className="text-[16px] md:text-[20px] font-black text-[#111827] tracking-tight leading-none truncate max-w-[150px] md:max-w-none">
             {meta.title}
           </h2>
         </div>
       </div>
 
       {/* CENTER: Search */}
-      <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-130 hidden lg:block">
+      <div className="absolute left-1/2 -translate-x-1/2 w-full max-w-130 hidden xl:block">
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search size={16} className={searchFocused ? 'text-[#6B7F3A]' : 'text-text-light'} />
@@ -123,7 +131,7 @@ export function Header() {
       </div>
 
       {/* RIGHT: Actions */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         {/* Date & Time */}
         <div className="hidden md:flex items-center gap-2.5 h-10 px-2.5 rounded-xl bg-[#F8FAF5] border border-[#E5E7EB] shadow-sm">
           <div className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center text-[#6B7F3A]">
@@ -139,11 +147,11 @@ export function Header() {
 
         {/* Light/Dark UI */}
         <div className="flex items-center gap-1.5 p-1 bg-[#F8FAF5] rounded-full border border-[#E5E7EB]">
-          <button className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-sm" title="Light Mode">
+          <button className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-xs md:text-sm" title="Light Mode">
             ☀️
           </button>
           <button
-            className="w-8 h-8 rounded-full flex items-center justify-center text-sm grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all"
+            className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-xs md:text-sm grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all"
             title="Dark Mode"
           >
             🌙

@@ -312,7 +312,7 @@ export default function EmployeeTaskDetails() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
         <div className="space-y-5">
           <div className="bg-white rounded-3xl shadow-sm border border-surface-border overflow-hidden">
-            <div className="relative p-6 overflow-hidden"
+            <div className="relative p-5 md:p-6 overflow-hidden"
               style={{ background: 'linear-gradient(135deg, #334612 0%, #556F1F 100%)' }}>
               <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10 blur-2xl pointer-events-none" />
               <div className="relative z-10">
@@ -320,14 +320,14 @@ export default function EmployeeTaskDetails() {
                   <span className="text-[10px] font-mono font-bold text-white/60 bg-white/10 px-2 py-0.5 rounded-md">{task.jobNumber}</span>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border border-white/20 text-white bg-white/10">{statusCfg.label}</span>
                 </div>
-                <h1 className="text-xl font-black text-white tracking-tight leading-tight">{task.taskName}</h1>
-                <p className="text-white/70 text-[12px] font-semibold mt-1 flex items-center gap-1.5">
+                <h1 className="text-lg md:text-xl font-black text-white tracking-tight leading-tight">{task.taskName}</h1>
+                <p className="text-white/70 text-[11px] md:text-[12px] font-semibold mt-1 flex items-center gap-1.5">
                   <Building2 size={12} /> Project: {task.projectName || 'Assigned Project'}
                 </p>
               </div>
             </div>
 
-            <div className="p-6 space-y-5">
+            <div className="p-5 md:p-6 space-y-5">
               {task.status === 'REWORK_REQUESTED' && (
                 <div className="flex gap-3 p-4 bg-orange-50 border border-orange-200 rounded-2xl">
                   <div className="w-9 h-9 rounded-xl bg-orange-100 flex items-center justify-center shrink-0"><RotateCcw size={18} className="text-orange-600" /></div>
