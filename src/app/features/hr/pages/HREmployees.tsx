@@ -1,7 +1,8 @@
 import { useEffect, useState, useMemo } from 'react'
 import {
   Search, Mail, Phone, X,
-  Users, UserPlus, Download
+  Users, UserPlus, Download,
+  UserX, UserCheck
 } from 'lucide-react'
 import { Card } from '@/shared/components/ui/Card'
 import { Avatar } from '@/shared/components/ui/Avatar'

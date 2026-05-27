@@ -43,7 +43,7 @@ export default function Approvals() {
       ])
       
       let visibleTasks = taskRes.content
-      if (user.role === 'project_manager') {
+      if (user.roles.includes('project_manager')) {
         visibleTasks = visibleTasks.filter(t => t.createdBy?.id === user.id)
       }
       

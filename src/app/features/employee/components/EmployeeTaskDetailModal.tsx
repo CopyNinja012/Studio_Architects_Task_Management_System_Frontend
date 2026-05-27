@@ -190,7 +190,7 @@ function SubmitPanel({ task, totalSeconds, onSuccess }: {
           <span className="text-[12px] font-black uppercase tracking-widest">Submit for Review</span>
         </div>
         <span className="text-[8px] font-bold text-white/60 uppercase tracking-tighter mt-0.5">
-          Sent to: {task.createdBy.name} ({task.createdBy.role?.replace('_', ' ') || 'Admin'})
+          Sent to: {task.createdBy.name}
         </span>
       </button>
     </div>
@@ -517,7 +517,7 @@ export function EmployeeTaskDetailModal({ task: initialTask, id, open, projects 
                     </div>
                     <div>
                       <p className="text-[12px] font-black text-text-dark leading-none mb-0.5">{task.createdBy.name}</p>
-                      <p className="text-[10px] font-bold text-text-light uppercase tracking-wider">{task.createdBy.role?.replace('_', ' ') || 'Authority'}</p>
+                      <p className="text-[10px] font-bold text-text-light uppercase tracking-wider">Task Authority</p>
                     </div>
                   </div>
                   <div className="text-right">

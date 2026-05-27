@@ -144,7 +144,7 @@ function EmployeeWorkDetailModal({ user, onClose }: { user: EmployeeWorkReportRe
           <h4 className="text-[10px] font-black uppercase tracking-widest mb-3 opacity-40">Contributing Projects</h4>
           <div className="flex flex-wrap gap-2">
             {report.contributingProjects.length > 0 ? report.contributingProjects.map(p => (
-              <Badge key={p} variant="outline" className="px-3 py-1 text-[11px] font-bold border-primary-olive/20 text-primary-olive">{p}</Badge>
+              <Badge key={p} variant="neutral" className="px-3 py-1 text-[11px] font-bold border-primary-olive/20 text-primary-olive">{p}</Badge>
             )) : <p className="text-xs text-text-light italic">No projects recorded in this period</p>}
           </div>
         </div>
@@ -497,13 +497,13 @@ export default function ReportDashboard() {
         </div>
 
         <DataTable 
-          columns={getActiveColumns()} 
-          data={filteredData} 
+          columns={getActiveColumns() as any} 
+          data={filteredData as any} 
           loading={loading} 
           rowKey={r => (r as any).projectId || (r as any).userId} 
           onRowClick={r => {
             if (activeTab === 'projects') setSelectedProjectId((r as any).projectId)
-            if (activeTab === 'work') setSelectedWorkUser(r as EmployeeWorkReportResponse)
+            if (activeTab === 'work') setSelectedWorkUser(r as any)
           }}
           emptyMessage={`No ${activeTab} data found for this period`}
         />
