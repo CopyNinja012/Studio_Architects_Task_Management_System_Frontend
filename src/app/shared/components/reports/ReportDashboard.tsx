@@ -6,7 +6,7 @@ import {
   Download, Search, Briefcase, TrendingUp, Clock, 
   Building2, Loader2,
   CheckCircle2, AlertCircle, PlayCircle, History,
-  ArrowRight
+  ArrowRight, Zap, RotateCcw
 } from 'lucide-react'
 import { Button } from '@/shared/components/ui/Button'
 import { Card } from '@/shared/components/ui/Card'
@@ -74,7 +74,7 @@ function ProjectReportDetailModal({ id, preset, onClose }: { id: string; preset:
            </div>
            <div className="p-8 bg-[#111827] rounded-[40px] text-white">
               <h4 className="text-xs font-black uppercase tracking-widest mb-6 opacity-40">Progress Trajectory</h4>
-              <div className="h-[240px]">
+              <div className="h-60">
                  <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={[
                       { name: 'Initial', val: 0 },
@@ -245,19 +245,19 @@ export default function ReportDashboard() {
         const counts = row.report.taskCountByStatus
         return (
           <div className="flex gap-2">
-            <div className="flex flex-col items-center px-2 py-1 bg-emerald-50 rounded-lg border border-emerald-100 min-w-[64px]">
+            <div className="flex flex-col items-center px-2 py-1 bg-emerald-50 rounded-lg border border-emerald-100 min-w-16">
               <span className="text-[7px] font-black text-emerald-600 uppercase">Completed</span>
               <span className="text-[11px] font-black text-emerald-700">{counts['COMPLETED'] || 0}</span>
             </div>
-            <div className="flex flex-col items-center px-2 py-1 bg-blue-50 rounded-lg border border-blue-100 min-w-[64px]">
+            <div className="flex flex-col items-center px-2 py-1 bg-blue-50 rounded-lg border border-blue-100 min-w-16">
               <span className="text-[7px] font-black text-blue-600 uppercase">Review</span>
               <span className="text-[11px] font-black text-blue-700">{counts['UNDER_REVIEW'] || 0}</span>
             </div>
-            <div className="flex flex-col items-center px-2 py-1 bg-slate-50 rounded-lg border border-slate-100 min-w-[64px]">
+            <div className="flex flex-col items-center px-2 py-1 bg-slate-50 rounded-lg border border-slate-100 min-w-16">
               <span className="text-[7px] font-black text-slate-600 uppercase">Assigned</span>
               <span className="text-[11px] font-black text-slate-700">{counts['ASSIGNED'] || 0}</span>
             </div>
-            <div className="flex flex-col items-center px-2 py-1 bg-rose-50 rounded-lg border border-rose-100 min-w-[64px]">
+            <div className="flex flex-col items-center px-2 py-1 bg-rose-50 rounded-lg border border-rose-100 min-w-16">
               <span className="text-[7px] font-black text-rose-600 uppercase">Rework</span>
               <span className="text-[11px] font-black text-rose-700">{counts['REWORK_REQUESTED'] || 0}</span>
             </div>
@@ -290,7 +290,7 @@ export default function ReportDashboard() {
     {
       key: 'projects', header: 'Project Contributions',
       render: row => (
-        <div className="flex flex-wrap gap-1 max-w-[180px]">
+        <div className="flex flex-wrap gap-1 max-w-45">
           {row.report.contributingProjects.length > 0 ? (
             row.report.contributingProjects.slice(0, 3).map(p => (
               <Badge key={p} className="text-[8px] bg-slate-100 text-slate-600 border-none px-1.5 py-0.5">{p}</Badge>
@@ -423,7 +423,7 @@ export default function ReportDashboard() {
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       {/* ── Tabs Bar ────────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-2 p-1.5 bg-white/40 backdrop-blur-sm w-fit rounded-[24px] border border-white/40 shadow-sm overflow-x-auto no-scrollbar max-w-full">
+      <div className="flex items-center gap-2 p-1.5 bg-white/40 backdrop-blur-sm w-fit rounded-3xl border border-white/40 shadow-sm overflow-x-auto no-scrollbar max-w-full">
         {[
           { id: 'projects', label: 'Projects', icon: <Briefcase size={14} /> },
           { id: 'work', label: 'Work Report', icon: <Clock size={14} /> },
@@ -444,7 +444,7 @@ export default function ReportDashboard() {
       </div>
 
       {/* ── Main Report Card ────────────────────────────────────────────────── */}
-      <Card padding="none" className="rounded-[32px] border-none shadow-premium overflow-hidden bg-white">
+      <Card padding="none" className="rounded-4xl border-none shadow-premium overflow-hidden bg-white">
         <div className="p-4 border-b border-surface-border flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white">
           <div className="flex items-center gap-4 flex-1 min-w-0">
             <div className="relative w-64">
