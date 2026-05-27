@@ -91,7 +91,7 @@ export function AddRoleModal({ open, onClose, onSuccess }: AddRoleModalProps) {
   const onSubmit = async (data: UserFormData) => {
     try {
       // 1. If 'Other' is provided, save it to the database first
-      let customSkillValue = data.customSkills?.trim()
+      const customSkillValue = data.customSkills?.trim()
       if (isOtherSelected && customSkillValue) {
         try {
           await skillsApi.create(customSkillValue)

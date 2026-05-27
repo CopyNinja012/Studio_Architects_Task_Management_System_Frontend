@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ClipboardCheck, CheckCircle2, RotateCcw, Search,
@@ -33,7 +33,7 @@ export default function Approvals() {
   const [approvingId, setApprovingId] = useState<string | null>(null)
   const [detailTaskId, setDetailTaskId] = useState<string | null>(null)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) return
     setLoading(true)
     try {
@@ -56,9 +56,9 @@ export default function Approvals() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
 
-  useEffect(() => { fetchData() }, [user?.id])
+  useEffect(() => { fetchData() }, [fetchData])
 
   const filtered = useMemo(() => tasks.filter(t => {
     const q = search.toLowerCase()
@@ -239,7 +239,7 @@ export default function Approvals() {
 
       {reworkTask && (
         <ReworkModal 
-          task={reworkTask as any} 
+          task={reworkTask} 
           onClose={() => setReworkTask(null)} 
           onSubmit={handleRework} 
         />

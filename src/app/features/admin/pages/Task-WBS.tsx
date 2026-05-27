@@ -199,8 +199,8 @@ export default function TaskWBS() {
         )
       },
     },
-    { key: 'priority', header: 'Priority', align: 'center', render: row => <PriorityTag priority={row.priority.toLowerCase() as any} /> },
-    { key: 'status', header: 'Status', align: 'center', render: row => <StatusPill status={row.status.toLowerCase() as any} /> },
+    { key: 'priority', header: 'Priority', align: 'center', render: row => <PriorityTag priority={row.priority as any} /> },
+    { key: 'status', header: 'Status', align: 'center', render: row => <StatusPill status={row.status} /> },
     {
       key: 'progress', header: 'Progress',
       render: row => {

@@ -1,12 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-  AreaChart, Area, PieChart, Pie, Cell
+  AreaChart, Area, Tooltip, ResponsiveContainer
 } from 'recharts'
 import { 
-  Download, Search, Briefcase, Users, TrendingUp, Clock, 
-  ChevronRight, Calendar, Zap, FileBarChart,
-  Target, RotateCcw, Building2, User, Loader2,
+  Download, Search, Briefcase, TrendingUp, Clock, 
+  Building2, Loader2,
   CheckCircle2, AlertCircle, PlayCircle, History,
   ArrowRight
 } from 'lucide-react'
@@ -15,7 +13,6 @@ import { Card } from '@/shared/components/ui/Card'
 import { Badge } from '@/shared/components/ui/Badge'
 import { Modal } from '@/shared/components/ui/Modal'
 import { DataTable, type Column } from '@/shared/components/table/DataTable'
-import { PageLoader } from '@/shared/components/ui/Loader'
 import { cn } from '@/shared/lib/cn'
 import { useAuthStore } from '@/store'
 import { reportsApi } from '@/features/admin/api/reportsApi'
@@ -26,9 +23,6 @@ import type {
   EmployeeWorkReportResponse,
   EmployeePerformanceReportResponse,
   EmployeePipelineReportResponse,
-  EmployeeWorkReportSummary,
-  EmployeePerformanceReportSummary,
-  EmployeePipelineReportSummary
 } from '@/features/admin/model/types'
 import { toast } from 'sonner'
 
@@ -413,26 +407,18 @@ export default function ReportDashboard() {
   ]
 
   const filteredData = useMemo(() => {
+    const s = search.toLowerCase()
     switch(activeTab) {
       case 'projects': 
-        return projectReports.filter(p => p.projectName.toLowerCase().includes(search.toLowerCase()) || p.jobNumber.toLowerCase().includes(search.toLowerCase()))
+        return projectReports.filter(p => p.projectName.toLowerCase().includes(s) || p.jobNumber.toLowerCase().includes(s))
       case 'work':
-        return employeeWork.filter(e => e.userName.toLowerCase().includes(search.toLowerCase()) || e.email.toLowerCase().includes(search.toLowerCase()))
+        return employeeWork.filter(e => e.userName.toLowerCase().includes(s) || e.email.toLowerCase().includes(s))
       case 'pipeline':
-        return employeePipe.filter(e => e.userName.toLowerCase().includes(search.toLowerCase()) || e.email.toLowerCase().includes(search.toLowerCase()))
+        return employeePipe.filter(e => e.userName.toLowerCase().includes(s) || e.email.toLowerCase().includes(s))
       case 'performance':
-        return employeePerf.filter(e => e.userName.toLowerCase().includes(search.toLowerCase()) || e.email.toLowerCase().includes(search.toLowerCase()))
+        return employeePerf.filter(e => e.userName.toLowerCase().includes(s) || e.email.toLowerCase().includes(s))
     }
   }, [activeTab, projectReports, employeeWork, employeePerf, employeePipe, search])
-
-  const getActiveColumns = () => {
-    switch(activeTab) {
-      case 'projects': return projectColumns
-      case 'work': return workColumns
-      case 'pipeline': return pipelineColumns
-      case 'performance': return performanceColumns
-    }
-  }
 
   return (
     <div className="space-y-6 animate-fade-in pb-12">
@@ -496,17 +482,47 @@ export default function ReportDashboard() {
           </div>
         </div>
 
-        <DataTable 
-          columns={getActiveColumns() as any} 
-          data={filteredData as any} 
-          loading={loading} 
-          rowKey={r => (r as any).projectId || (r as any).userId} 
-          onRowClick={r => {
-            if (activeTab === 'projects') setSelectedProjectId((r as any).projectId)
-            if (activeTab === 'work') setSelectedWorkUser(r as any)
-          }}
-          emptyMessage={`No ${activeTab} data found for this period`}
-        />
+        {activeTab === 'projects' && (
+          <DataTable 
+            columns={projectColumns} 
+            data={filteredData as ProjectReportResponse[]} 
+            loading={loading} 
+            rowKey={r => r.projectId} 
+            onRowClick={r => setSelectedProjectId(r.projectId)}
+            emptyMessage="No project data found for this period"
+          />
+        )}
+
+        {activeTab === 'work' && (
+          <DataTable 
+            columns={workColumns} 
+            data={filteredData as EmployeeWorkReportResponse[]} 
+            loading={loading} 
+            rowKey={r => r.userId} 
+            onRowClick={r => setSelectedWorkUser(r)}
+            emptyMessage="No work report data found for this period"
+          />
+        )}
+
+        {activeTab === 'pipeline' && (
+          <DataTable 
+            columns={pipelineColumns} 
+            data={filteredData as EmployeePipelineReportResponse[]} 
+            loading={loading} 
+            rowKey={r => r.userId} 
+            emptyMessage="No pipeline data found for this period"
+          />
+        )}
+
+        {activeTab === 'performance' && (
+          <DataTable 
+            columns={performanceColumns} 
+            data={filteredData as EmployeePerformanceReportResponse[]} 
+            loading={loading} 
+            rowKey={r => r.userId} 
+            emptyMessage="No performance data found for this period"
+          />
+        )}
       </Card>
 
       {selectedProjectId && (

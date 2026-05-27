@@ -12,26 +12,15 @@ import type { TaskApi, TaskStatusApi, TaskTimelineResponse, TaskAttachmentRespon
 import { toast } from 'sonner'
 import { Modal } from '@/shared/components/ui/Modal'
 import { FilePreviewModal } from '@/shared/components/ui/FilePreviewModal'
-
-// ─── Timer helpers ────────────────────────────────────────────────────────────
-
-interface TimerState { totalSeconds: number; startedAt: string | null }
-function timerKey(id: string) { return `task_timer_${id}` }
-function loadTimer(id: string): TimerState {
-  try { const r = localStorage.getItem(timerKey(id)); if (r) return JSON.parse(r) } catch {}
-  return { totalSeconds: 0, startedAt: null }
-}
-function saveTimer(id: string, s: TimerState) { localStorage.setItem(timerKey(id), JSON.stringify(s)) }
-function clearTimer(id: string) { localStorage.removeItem(timerKey(id)) }
-function liveSeconds(s: TimerState) {
-  if (!s.startedAt) return s.totalSeconds
-  return s.totalSeconds + Math.floor((Date.now() - new Date(s.startedAt).getTime()) / 1000)
-}
-function fmtDuration(sec: number) {
-  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60
-  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
-}
-function secondsToHours(sec: number) { return Math.round((sec / 3600) * 10) / 10 }
+import { 
+  type TimerState, 
+  loadTimer, 
+  saveTimer, 
+  clearTimer, 
+  liveSeconds, 
+  fmtDuration, 
+  secondsToHours 
+} from '@/shared/lib/timer'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

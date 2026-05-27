@@ -102,7 +102,7 @@ export function EditUserModal({ user, open, onClose, onSuccess }: EditUserModalP
   const onSubmit = async (data: UserFormData) => {
     try {
       const skillsToSubmit = data.skills.filter(s => s !== 'OTHER')
-      let customSkillValue = data.customSkills?.trim()
+      const customSkillValue = data.customSkills?.trim()
 
       // 1. If 'Other' is provided, handle it
       if (isOtherSelected && customSkillValue) {
