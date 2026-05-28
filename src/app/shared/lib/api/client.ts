@@ -5,14 +5,20 @@ const BASE_URL = import.meta.env.VITE_API_URL || '/api'
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+  },
   timeout: 15000,
 })
 
 // Separate client for refresh to avoid interceptor loops
 const refreshClient = axios.create({
   baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+  },
   timeout: 15000,
 })
 
