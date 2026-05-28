@@ -98,7 +98,9 @@ export const taskApi = {
       files.forEach(f => formData.append('files', f))
     }
 
-    const res = await apiClient.post<ApiResponse<TaskApi>>(`${BASE}/${taskId}/submit`, formData)
+    const res = await apiClient.post<ApiResponse<TaskApi>>(`${BASE}/${taskId}/submit`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
     return res.data.data
   },
 
