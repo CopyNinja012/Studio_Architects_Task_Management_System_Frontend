@@ -91,11 +91,11 @@ export const taskApi = {
     
     // The backend expects "submission" part to be a JSON blob (MediaType.APPLICATION_JSON)
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-    formData.append('submission', blob)
+    formData.append('submission', blob, 'submission.json')
 
-    // The backend expects "attachments" part to be one or more binary file parts
+    // The backend expects "files" part to be one or more binary file parts
     if (files && files.length > 0) {
-      files.forEach(f => formData.append('attachments', f))
+      files.forEach(f => formData.append('files', f))
     }
 
     const res = await apiClient.post<ApiResponse<TaskApi>>(`${BASE}/${taskId}/submit`, formData)
