@@ -19,7 +19,7 @@ const userSchema = z.object({
   name: z.string().min(2, 'Name is required'),
   email: z.string().email('Invalid email address'),
   phone: mobileValidator,
-  alternativePhone: mobileValidator.optional(),
+  alternativePhone: z.string().optional().refine(val => !val || /^\d{10}$/.test(val), { message: 'Mobile number must be exactly 10 digits' }),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER'] as const, { message: 'Gender is required' }),
   address: z.string().min(5, 'Address is required'),
   bankAccountNumber: bankAccountNumberValidator,
