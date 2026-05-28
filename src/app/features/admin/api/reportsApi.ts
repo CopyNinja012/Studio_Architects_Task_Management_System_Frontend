@@ -27,7 +27,7 @@ export const reportsApi = {
     return res.data.data
   },
 
-  // ─── Employee Reports (Admin/PM access) ────────────────────────────────────
+  // ─── Employee Reports (Admin/PM/HR access) ────────────────────────────────────
 
   getEmployeesWork: async (params: DateRangeRequest): Promise<EmployeeWorkReportResponse[]> => {
     const res = await apiClient.get<ApiResponse<EmployeeWorkReportResponse[]>>(`${BASE}/employees/work`, { params })

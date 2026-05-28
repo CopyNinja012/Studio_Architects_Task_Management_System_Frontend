@@ -253,7 +253,7 @@ export default function HRReports() {
       
       {/* ── Tabs Toolbar ─────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1.5 p-1.5 bg-white rounded-[24px] border border-[#E5E7EB] shadow-sm overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1.5 p-1.5 bg-white rounded-3xl border border-[#E5E7EB] shadow-sm overflow-x-auto no-scrollbar">
           {[
             { id: 'work', label: 'Work Audit', icon: <Clock size={14} /> },
             { id: 'performance', label: 'Performance Alpha', icon: <TrendingUp size={14} /> },
@@ -272,7 +272,7 @@ export default function HRReports() {
           ))}
         </div>
 
-        <div className="flex items-center gap-1.5 p-1.5 bg-[#F3F4F6] rounded-[24px] border border-[#E5E7EB] overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1.5 p-1.5 bg-[#F3F4F6] rounded-3xl border border-[#E5E7EB] overflow-x-auto no-scrollbar">
           {PRESETS.map(p => (
             <button
               key={p.id}
@@ -321,7 +321,7 @@ export default function HRReports() {
 
         <div className="relative z-10">
           <DataTable
-            columns={activeTab === 'work' ? workColumns : activeTab === 'performance' ? perfColumns : pipeColumns}
+            columns={(activeTab === 'work' ? workColumns : activeTab === 'performance' ? perfColumns : pipeColumns) as any}
             data={filteredData}
             loading={loading}
             rowKey={r => r.userId}
