@@ -89,24 +89,24 @@ export function Modal({
           >
             {/* Premium Header */}
             {(title || subtitle) && (
-              <div className="flex items-center justify-between px-8 py-7 border-b border-primary-100 bg-primary-50/30 shrink-0">
-                <div className="flex items-center gap-5">
+              <div className="flex items-center justify-between px-8 py-4 border-b border-primary-100 bg-primary-50/30 shrink-0">
+                <div className="flex items-center gap-4">
                   {icon && (
-                    <div className="w-12 h-12 rounded-[20px] bg-white flex items-center justify-center border border-primary-100 shadow-sm shrink-0">
+                    <div className="w-10 h-10 rounded-[16px] bg-white flex items-center justify-center border border-primary-100 shadow-sm shrink-0">
                       <span className="text-primary-olive">{icon}</span>
                     </div>
                   )}
-                  <div className="space-y-1">
-                    <h2 className="text-[22px] font-black text-text-dark tracking-tight leading-none">{title}</h2>
-                    {subtitle && <div className="text-[10px] font-black text-primary-olive uppercase tracking-[0.2em] leading-none">{subtitle}</div>}
+                  <div className="space-y-0.5">
+                    <h2 className="text-[18px] font-black text-text-dark tracking-tight leading-tight">{title}</h2>
+                    {subtitle && <div className="text-[9px] font-black text-primary-olive uppercase tracking-[0.15em] leading-none">{subtitle}</div>}
                   </div>
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-10 h-10 rounded-2xl hover:bg-rose-50 text-text-light hover:text-rose-600 transition-all border border-transparent hover:border-rose-100 flex items-center justify-center shrink-0 group"
+                  className="w-8 h-8 rounded-xl hover:bg-rose-50 text-text-light hover:text-rose-600 transition-all border border-transparent hover:border-rose-100 flex items-center justify-center shrink-0 group"
                   aria-label="Close modal"
                 >
-                  <X size={22} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
+                  <X size={18} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
                 </button>
               </div>
             )}
@@ -115,16 +115,16 @@ export function Modal({
             <div className={cn(
               'flex-1 overflow-y-auto custom-scrollbar bg-white',
               padding === 'none' ? 'p-0' : 
-              padding === 'sm' ? 'p-5' : 
-              padding === 'lg' ? 'p-12' : 
-              'p-10'
+              padding === 'sm' ? 'p-4' : 
+              padding === 'lg' ? 'p-10' : 
+              'p-8'
             )}>
               {children}
             </div>
 
             {/* Premium Footer */}
             {footer && (
-              <div className="px-10 py-7 border-t border-primary-100 bg-primary-50/20 flex items-center justify-end gap-4 shrink-0">
+              <div className="px-8 py-4 border-t border-primary-100 bg-primary-50/20 flex items-center justify-end gap-3 shrink-0">
                 {footer}
               </div>
             )}

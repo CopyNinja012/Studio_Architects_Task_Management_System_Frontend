@@ -585,7 +585,9 @@ export function EmployeeTaskDetailModal({ task: initialTask, id, open, projects 
                           </div>
                           <div className="min-w-0">
                             <p className="text-[11px] font-bold text-text-dark truncate leading-tight">{file.fileName}</p>
-                            <p className="text-[8px] text-text-light font-medium">{(file.fileSize / 1024).toFixed(0)} KB · {file.fileType.split('/')[1]?.toUpperCase() || 'FILE'}</p>
+                            <p className="text-[8px] text-text-light font-medium">
+                              {file.fileSize ? `${(file.fileSize / 1024).toFixed(0)} KB` : 'Unknown Size'} · {file.fileType?.includes('/') ? file.fileType.split('/')[1].toUpperCase() : (file.fileType?.toUpperCase() || file.fileName.split('.').pop()?.toUpperCase() || 'FILE')}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-1">

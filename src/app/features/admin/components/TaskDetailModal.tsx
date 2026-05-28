@@ -158,7 +158,7 @@ export function TaskDetailModal({ id, open, onClose, onTaskUpdated, hideActions 
       size="xl"
       title={task.taskName}
       subtitle={`Task ID #${task.jobNumber} · ${projectName}`}
-      icon={<Building2 size={24} className="text-primary-olive" />}
+      icon={<Building2 size={20} className="text-primary-olive" />}
       footer={
         <div className="flex items-center justify-between w-full px-2">
           <div className="flex items-center gap-4 text-[9px] font-black text-[#9CA3AF] uppercase tracking-widest italic">
@@ -254,7 +254,7 @@ export function TaskDetailModal({ id, open, onClose, onTaskUpdated, hideActions 
                           <div className="min-w-0">
                             <p className="text-[11px] font-bold text-[#111827] truncate leading-tight">{file.fileName}</p>
                             <p className="text-[8.5px] text-[#9CA3AF] font-bold mt-0.5 uppercase tracking-tight">
-                              {(file.fileSize / 1024).toFixed(0)} KB · {file.fileType.split('/')[1]?.toUpperCase() || 'DATA'}
+                              {file.fileSize ? `${(file.fileSize / 1024).toFixed(0)} KB` : 'Unknown Size'} · {file.fileType?.includes('/') ? file.fileType.split('/')[1].toUpperCase() : (file.fileType?.toUpperCase() || file.fileName.split('.').pop()?.toUpperCase() || 'FILE')}
                             </p>
                           </div>
                         </div>

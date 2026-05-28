@@ -395,8 +395,11 @@ export default function EmployeeTaskDetails() {
                           </div>
                           <div className="min-w-0">
                             <p className="text-[12px] font-bold text-text-dark truncate leading-tight">{file.fileName}</p>
-                            <p className="text-[9px] text-text-light font-bold uppercase">{(file.fileSize / 1024).toFixed(0)} KB • {file.fileType.split('/')[1]?.toUpperCase() || 'FILE'}</p>
+                            <p className="text-[9px] text-text-light font-bold uppercase">
+                              {file.fileSize ? `${(file.fileSize / 1024).toFixed(0)} KB` : 'Unknown Size'} • {file.fileType?.includes('/') ? file.fileType.split('/')[1].toUpperCase() : (file.fileType?.toUpperCase() || file.fileName.split('.').pop()?.toUpperCase() || 'FILE')}
+                            </p>
                           </div>
+
                         </div>
                         <div className="w-7 h-7 rounded-lg flex items-center justify-center text-text-light group-hover:text-primary-olive group-hover:bg-primary-50 transition-all opacity-0 group-hover:opacity-100">
                            <Eye size={13} />
