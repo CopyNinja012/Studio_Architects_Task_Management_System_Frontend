@@ -76,11 +76,11 @@ export default function EmployeeReportView({ userId, userName, hideToolbar = fal
   }
 
   return (
-    <div className="animate-fade-in pb-20 space-y-10 max-w-[1400px] mx-auto">
+    <div className="animate-fade-in pb-20 space-y-10 max-w-350 mx-auto">
       
       {/* ── Refactored Toolbar (Cylindrical Box) ────────────────────────── */}
       {!hideToolbar && (
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-[32px] md:rounded-full shadow-sm mx-2">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-4xl md:rounded-full shadow-sm mx-2">
           <div className="flex items-center gap-4 px-4">
             <div className="w-10 h-10 rounded-full bg-primary-olive/10 flex items-center justify-center text-primary-olive text-xl">
               👤
@@ -181,13 +181,13 @@ export default function EmployeeReportView({ userId, userName, hideToolbar = fal
           </div>
           <div className="space-y-6">
              <div className="relative pl-6 border-l-2 border-emerald-500/20">
-                <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-emerald-500" />
+                <div className="absolute -left-1.25 top-0 w-2 h-2 rounded-full bg-emerald-500" />
                 <p className="text-[9px] font-black text-emerald-600 uppercase mb-1 tracking-widest">Currently Active</p>
                 <p className="text-[13px] font-bold text-text-dark truncate">{pipe?.currentTask?.taskName || 'No active task'}</p>
                 {pipe?.currentTask && <p className="text-[9px] font-bold text-text-light mt-1">{pipe.currentTask.jobNumber}</p>}
              </div>
              <div className="relative pl-6 border-l-2 border-blue-500/20">
-                <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-blue-500" />
+                <div className="absolute -left-1.25 top-0 w-2 h-2 rounded-full bg-blue-500" />
                 <p className="text-[9px] font-black text-blue-600 uppercase mb-1 tracking-widest">Scheduled Next</p>
                 <p className="text-[13px] font-bold text-text-dark truncate">{pipe?.nextScheduledTask?.taskName || 'Pipeline Clear'}</p>
                 {pipe?.nextScheduledTask && <p className="text-[9px] font-bold text-text-light mt-1">{pipe.nextScheduledTask.jobNumber}</p>}

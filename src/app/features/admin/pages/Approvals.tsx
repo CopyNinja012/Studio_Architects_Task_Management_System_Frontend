@@ -157,7 +157,7 @@ export default function Approvals() {
     <div className="space-y-6 animate-fade-in">
       
       {/* ── Refactored Navigation & Controls (Cylindrical Box) ─────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-[32px] md:rounded-full shadow-sm mx-2">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-4xl md:rounded-full shadow-sm mx-2">
         <div className="flex flex-wrap items-center gap-1">
           {([
             { id: 'UNDER_REVIEW',     label: 'Pending' },

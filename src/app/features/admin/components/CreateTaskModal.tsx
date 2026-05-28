@@ -339,8 +339,8 @@ export function CreateTaskModal({ open, onClose, onCreated }: Props) {
             {...register('description')}
             rows={3}
             placeholder="Enter task instructions or scope…"
-            className="w-full rounded-[24px] border border-[#E5E7EB] bg-white px-4 py-3.5 text-[14px] text-[#111827]
-                       placeholder:text-[#9CA3AF] resize-none font-medium transition-all
+            className="w-full rounded-3xl border border-[#E5E7EB] bg-white px-4 py-3.5 text-[14px] text-[#111827]
+                       placeholder:text-text-light resize-none font-medium transition-all
                        focus:outline-none focus:ring-4 focus:ring-primary-olive/5 focus:border-primary-olive shadow-sm"
           />
         </div>
