@@ -8,6 +8,7 @@ import { format } from 'date-fns'
 import { cn } from '@/shared/lib/cn'
 import { formatDate } from '@/shared/lib/date'
 import { taskApi } from '@/features/admin/api/taskApi'
+import { useAuthStore } from '@/store'
 import type { TaskApi, TaskStatusApi, TaskTimelineResponse, TaskAttachmentResponse } from '@/features/admin/model/types'
 import { toast } from 'sonner'
 import { Modal } from '@/shared/components/ui/Modal'
@@ -281,20 +282,21 @@ export function EmployeeTaskDetailModal({ task: initialTask, id, open, projects 
     onTaskUpdated?.(updated)
   }
 
-  const handleFilePreview = async (file: TaskAttachmentResponse) => {
+  const handleFilePreview = (file: TaskAttachmentResponse) => {
     if (!task) return
-    try {
-      const blobRes = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/tasks/${task.id}/attachments/${file.id}/download`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-        }
-      })
-      const blob = await blobRes.blob()
-      const url = window.URL.createObjectURL(blob)
-      setPreviewFile({ url, name: file.fileName, type: file.fileType })
-    } catch (err) {
-      toast.error('Failed to load file preview')
+    
+    // Get current token from auth store for authenticated direct access
+    const token = useAuthStore.getState().user?.token
+    const directUrl = taskApi.getAttachmentUrl(task.id, file.id, token)
+    
+    // For images and PDFs, we open the direct URL in a new tab (backend sends inline disposition)
+    if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
+      window.open(directUrl, '_blank')
+      return
     }
+
+    // For other files, use the preview modal with the direct authenticated URL
+    setPreviewFile({ url: directUrl, name: file.fileName, type: file.fileType })
   }
 
   const handleDeleteAttachment = async (fileId: string) => {

@@ -105,9 +105,12 @@ export const taskApi = {
   },
 
   // ── Attachments ────────────────────────────────────────────────────────────
-  getAttachmentUrl: (taskId: string, attachmentId: string): string => {
+  getAttachmentUrl: (taskId: string, attachmentId: string, token?: string): string => {
     const base = import.meta.env.VITE_API_URL || ''
-    return `${base}/api/tasks/${taskId}/attachments/${attachmentId}/download`
+    // Ensure we don't double up on /api if base already has it
+    const apiPrefix = base.endsWith('/api') ? '' : '/api'
+    const url = `${base}${apiPrefix}/tasks/${taskId}/attachments/${attachmentId}/download`
+    return token ? `${url}?token=${token}` : url
   },
 
   listAttachments: async (taskId: string): Promise<TaskAttachmentResponse[]> => {
@@ -116,6 +119,7 @@ export const taskApi = {
   },
 
   getAttachmentBlob: async (taskId: string, attachmentId: string): Promise<Blob> => {
+    // We use the full path relative to apiClient's baseURL
     const res = await apiClient.get(`${BASE}/${taskId}/attachments/${attachmentId}/download`, {
       responseType: 'blob'
     })
