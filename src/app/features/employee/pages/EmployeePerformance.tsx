@@ -67,7 +67,7 @@ function PerformanceRing({ score }: { score: number }) {
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl font-black text-[#1A1F14] tracking-tighter">{score}</span>
+        <span className="text-4xl font-black text-text-dark tracking-tighter">{score}</span>
         <span className="text-[10px] font-black text-[#40521B]/40 uppercase tracking-[0.2em]">Efficiency</span>
       </div>
     </div>
@@ -76,7 +76,7 @@ function PerformanceRing({ score }: { score: number }) {
 
 function StatCard({ icon: Icon, label, value, sub, color }: { icon: any, label: string, value: string | number, subTextText?: string, sub: string, color: string }) {
   return (
-    <Card className="p-5 md:p-6 rounded-[32px] border-none shadow-sm bg-white group hover:-translate-y-1 transition-all duration-500">
+    <Card className="p-5 md:p-6 rounded-4xl border-none shadow-sm bg-white group hover:-translate-y-1 transition-all duration-500">
       <div className="flex items-center justify-between mb-4">
         <div className={cn("p-2.5 md:p-3 rounded-2xl transition-colors", color)}>
           <Icon size={18} className="md:w-5 md:h-5" />
@@ -84,7 +84,7 @@ function StatCard({ icon: Icon, label, value, sub, color }: { icon: any, label: 
         <ArrowUpRight size={16} className="text-[#40521B]/20 group-hover:text-[#40521B] transition-colors" />
       </div>
       <p className="text-[10px] font-black text-[#40521B]/40 uppercase tracking-[0.2em] mb-1">{label}</p>
-      <p className="text-xl md:text-2xl font-black text-[#1A1F14]">{value}</p>
+      <p className="text-xl md:text-2xl font-black text-text-dark">{value}</p>
       <p className="text-[10px] font-bold text-success mt-1">{sub}</p>
     </Card>
   )
@@ -103,7 +103,7 @@ export default function EmployeePerformance() {
             <Zap size={20} />
           </div>
           <div>
-            <h1 className="text-lg md:text-xl font-black text-[#1A1F14] tracking-tight uppercase">Performance Intelligence</h1>
+            <h1 className="text-lg md:text-xl font-black text-text-dark tracking-tight uppercase">Performance Intelligence</h1>
             <p className="text-[#40521B]/60 text-[10px] font-bold uppercase tracking-widest mt-0.5">Snapshot for {CURRENT.month}</p>
           </div>
         </div>
@@ -116,12 +116,12 @@ export default function EmployeePerformance() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ── Performance Core ── */}
-        <Card className="lg:col-span-1 p-6 md:p-8 rounded-[32px] border-none shadow-premium bg-white flex flex-col items-center justify-center text-center">
+        <Card className="lg:col-span-1 p-6 md:p-8 rounded-4xl border-none shadow-premium bg-white flex flex-col items-center justify-center text-center">
           <PerformanceRing score={CURRENT.overallScore} />
           <div className="mt-6 space-y-4 w-full">
             <div className="p-3 bg-[#F5F7F2] rounded-xl border border-[#40521B]/5">
               <p className="text-[9px] font-black text-[#40521B]/40 uppercase tracking-widest mb-1">Company Standing</p>
-              <p className="text-base md:text-lg font-black text-[#1A1F14]">Ranked #{CURRENT.rank} in Studio</p>
+              <p className="text-base md:text-lg font-black text-text-dark">Ranked #{CURRENT.rank} in Studio</p>
             </div>
             <div className="flex gap-2">
               <div className="flex-1 p-2.5 bg-emerald-50 rounded-xl border border-emerald-100">
@@ -174,13 +174,13 @@ export default function EmployeePerformance() {
         <Card className="lg:col-span-3 p-6 md:p-8 rounded-[40px] border-none shadow-premium bg-white">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="text-sm font-black text-[#1A1F14] uppercase tracking-widest">Growth Dynamics</h3>
+              <h3 className="text-sm font-black text-text-dark uppercase tracking-widest">Growth Dynamics</h3>
               <p className="text-[10px] text-[#40521B]/40 font-bold uppercase mt-1 tracking-wider">Historical score & output analysis</p>
             </div>
             <BarChart3 className="text-[#40521B]/20" />
           </div>
           
-          <div className="h-[220px] md:h-[280px] w-full">
+          <div className="h-55 md:h-70 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={HISTORY}>
                 <defs>
@@ -204,11 +204,11 @@ export default function EmployeePerformance() {
         {/* ── Capability Matrix ── */}
         <Card className="lg:col-span-2 p-6 md:p-8 rounded-[40px] border-none shadow-premium bg-white overflow-hidden">
           <div className="mb-8">
-            <h3 className="text-sm font-black text-[#1A1F14] uppercase tracking-widest">Architect Capability</h3>
+            <h3 className="text-sm font-black text-text-dark uppercase tracking-widest">Architect Capability</h3>
             <p className="text-[10px] text-[#40521B]/40 font-bold uppercase mt-1 tracking-wider">Multi-dimensional skill mapping</p>
           </div>
           
-          <div className="h-[220px] md:h-[280px] w-full flex items-center justify-center">
+          <div className="h-55 md:h-70 w-full flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="70%" data={RADAR_DATA}>
                 <PolarGrid stroke="#F0F3E8" />
@@ -235,13 +235,13 @@ export default function EmployeePerformance() {
           { label: 'Planning', value: 78, color: '#718742' },
           { label: 'Coordination', value: 88, color: '#B7C39A' },
         ].map((item, idx) => (
-          <Card key={idx} className="p-6 rounded-[32px] border-none shadow-sm bg-white">
+          <Card key={idx} className="p-6 rounded-4xl border-none shadow-sm bg-white">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[9px] font-black text-[#40521B]/40 uppercase tracking-widest">{item.label}</span>
-              <span className="text-[12px] font-black text-[#1A1F14]">{item.value}%</span>
+              <span className="text-[12px] font-black text-text-dark">{item.value}%</span>
             </div>
             <div className="h-1.5 bg-[#F5F7F2] rounded-full overflow-hidden">
-              <div className="h-full rounded-full transition-all duration-[1500ms]" style={{ width: `${item.value}%`, backgroundColor: item.color }} />
+              <div className="h-full rounded-full transition-all duration-1500" style={{ width: `${item.value}%`, backgroundColor: item.color }} />
             </div>
           </Card>
         ))}
