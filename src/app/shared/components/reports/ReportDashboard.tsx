@@ -124,7 +124,7 @@ export default function ReportDashboard() {
         </div>
       </div>
 
-      <div className="h-px bg-gradient-to-r from-transparent via-[#E5E7EB] to-transparent mx-4" />
+      <div className="h-px bg-linear-to-r from-transparent via-[#E5E7EB] to-transparent mx-4" />
 
       {/* ── Individual Report View ──────────────────────────────────────── */}
       {selectedId && selectedUser ? (
