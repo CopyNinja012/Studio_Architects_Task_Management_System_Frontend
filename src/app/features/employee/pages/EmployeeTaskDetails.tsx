@@ -276,13 +276,7 @@ export default function EmployeeTaskDetails() {
       const blob = await taskApi.getAttachmentBlob(task.id, file.id)
       const url = window.URL.createObjectURL(blob)
       
-      // For images and PDFs, we open the blob URL in a new tab
-      if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
-        window.open(url, '_blank')
-        return
-      }
-
-      // For other files, use the preview modal with the authorized blob URL
+      // Use the preview modal for all supported types (images, pdfs, etc.)
       setPreviewFile({ url, name: file.fileName, type: file.fileType })
     } catch (err) {
       toast.error('Failed to load file preview')

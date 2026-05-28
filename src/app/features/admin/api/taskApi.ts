@@ -121,13 +121,13 @@ export const taskApi = {
 
   getAttachmentBlob: async (taskId: string, attachmentId: string): Promise<Blob> => {
     // We use the full path relative to apiClient's baseURL
-    const res = await apiClient.get(`${BASE}/${taskId}/attachments/${attachmentId}/download`, {
+    const res = await apiClient.get(`/tasks/${taskId}/attachments/${attachmentId}/download`, {
       responseType: 'blob'
     })
     return res.data
   },
   downloadAttachment: async (taskId: string, attachmentId: string): Promise<void> => {
-    const res = await apiClient.get(`${BASE}/${taskId}/attachments/${attachmentId}/download`, {
+    const res = await apiClient.get(`/tasks/${taskId}/attachments/${attachmentId}/download`, {
       responseType: 'blob'
     })
 

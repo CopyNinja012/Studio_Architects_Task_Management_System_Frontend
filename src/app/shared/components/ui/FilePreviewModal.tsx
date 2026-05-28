@@ -28,7 +28,7 @@ export function FilePreviewModal({ open, onClose, fileUrl, fileName, fileType }:
     <Modal
       open={open}
       onClose={onClose}
-      size="xl"
+      size="full"
       title="File Preview"
       subtitle={fileName}
       padding="none"
@@ -45,7 +45,7 @@ export function FilePreviewModal({ open, onClose, fileUrl, fileName, fileType }:
         </div>
       }
     >
-      <div className="flex flex-col bg-[#111827] min-h-[70vh]">
+      <div className="flex flex-col bg-[#111827] h-full min-h-[80vh]">
         <div className="flex-1 flex items-center justify-center p-4">
           {isImage ? (
             <img src={fileUrl} alt={fileName} className="max-w-full max-h-[75vh] object-contain shadow-2xl rounded-lg animate-in fade-in zoom-in-95 duration-500" />
