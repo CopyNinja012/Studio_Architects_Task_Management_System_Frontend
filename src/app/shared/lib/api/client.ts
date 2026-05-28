@@ -47,6 +47,13 @@ const processQueue = (error: any, token: string | null) => {
 const toMessage = (err: unknown) => {
   if (axios.isAxiosError(err)) {
     const data: any = err.response?.data
+    if (err.response?.status === 403) {
+      console.error('[403 Forbidden Detail]:', {
+        data,
+        headers: err.response.headers,
+        url: err.config?.url
+      })
+    }
     return data?.message || data?.error || err.message
   }
   return err instanceof Error ? err.message : 'Request failed'
