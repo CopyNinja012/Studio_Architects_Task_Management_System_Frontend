@@ -326,8 +326,7 @@ export default function Dashboard() {
       .finally(() => setLoading(false))
   }, [])
 
-  const EMP_PATH =
-    (PATHS as any).ADMIN_EMPLOYEE ?? (PATHS as any).ADMIN_EMPLOYEES ?? '/admin/employees'
+  const EMP_PATH = PATHS.ADMIN_USER_MGMT
 
   const derived = useMemo(() => {
     const activeProjects = projects.filter(p => p.status === 'IN_PROGRESS' || p.status === 'PLANNING' || p.status === 'REWORK').length
