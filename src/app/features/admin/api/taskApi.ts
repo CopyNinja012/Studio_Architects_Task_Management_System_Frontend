@@ -105,6 +105,11 @@ export const taskApi = {
   },
 
   // ── Attachments ────────────────────────────────────────────────────────────
+  getAttachmentUrl: (taskId: string, attachmentId: string): string => {
+    const base = import.meta.env.VITE_API_URL || ''
+    return `${base}/api/tasks/${taskId}/attachments/${attachmentId}/download`
+  },
+
   listAttachments: async (taskId: string): Promise<TaskAttachmentResponse[]> => {
     const res = await apiClient.get<ApiResponse<TaskAttachmentResponse[]>>(`${BASE}/${taskId}/attachments`)
     return res.data.data

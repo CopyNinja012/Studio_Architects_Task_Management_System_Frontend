@@ -112,11 +112,17 @@ export function TaskDetailModal({ id, open, onClose, onTaskUpdated, hideActions 
 
   const handleFilePreview = async (file: TaskAttachmentResponse) => {
     if (!task) return
+    
+    // For images and PDFs, we can open them directly in a new tab to let the browser's native viewer handle it
+    // since the backend is already sending "inline" disposition for these types.
+    if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
+      const url = taskApi.getAttachmentUrl(task.id, file.id)
+      window.open(url, '_blank')
+      return
+    }
+
     try {
-      // We'll use the same download logic but get the URL for preview
-      const res = await taskApi.listAttachments(task.id) // Just to make sure we have access
-      // Fetch the actual blob
-      const blobRes = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/tasks/${task.id}/attachments/${file.id}/download`, {
+      const blobRes = await fetch(taskApi.getAttachmentUrl(task.id, file.id), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
