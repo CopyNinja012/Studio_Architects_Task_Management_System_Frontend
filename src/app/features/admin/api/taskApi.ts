@@ -81,8 +81,17 @@ export const taskApi = {
 
   // ── Admin reviews (approve / rework) ───────────────────────────────────────
   reviewTask: async (taskId: string, data: ReviewTaskRequest): Promise<TaskApi> => {
-    const res = await apiClient.post<ApiResponse<TaskApi>>(`${BASE}/${taskId}/review`, data)
-    return res.data.data
+    if (data.approved) {
+      // ✅ matches Spring: PATCH /api/tasks/{id}/approve
+      const res = await apiClient.patch<ApiResponse<TaskApi>>(`${BASE}/${taskId}/approve`)
+      return res.data.data
+    } else {
+      // ✅ matches Spring: PATCH /api/tasks/{id}/rework
+      const res = await apiClient.patch<ApiResponse<TaskApi>>(`${BASE}/${taskId}/rework`, {
+        note: data.remarks
+      })
+      return res.data.data
+    }
   },
 
   // ── Employee submits a task for review (works for admin-assigned & manual) ─
