@@ -101,7 +101,7 @@ export function Header() {
           <p className="text-[8px] md:text-[9px] font-black text-[#6B7F3A] tracking-[0.2em] uppercase mb-0.5 leading-none">
             {meta.subtitle}
           </p>
-          <h2 className="text-[16px] md:text-[20px] font-black text-[#111827] tracking-tight leading-none truncate max-w-[150px] md:max-w-none">
+          <h2 className="text-[16px] md:text-[20px] font-black text-[#111827] tracking-tight leading-none truncate max-w-37.5 md:max-w-none">
             {meta.title}
           </h2>
         </div>
@@ -146,7 +146,7 @@ export function Header() {
         </div>
 
         {/* Light/Dark UI */}
-        <div className="flex items-center gap-1.5 p-1 bg-[#F8FAF5] rounded-full border border-[#E5E7EB]">
+        {/* <div className="flex items-center gap-1.5 p-1 bg-[#F8FAF5] rounded-full border border-[#E5E7EB]">
           <button className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-xs md:text-sm" title="Light Mode">
             ☀️
           </button>
@@ -156,7 +156,7 @@ export function Header() {
           >
             🌙
           </button>
-        </div>
+        </div> */}
       </div>
     </header>
   )
