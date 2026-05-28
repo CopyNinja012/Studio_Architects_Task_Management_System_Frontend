@@ -30,7 +30,7 @@ import projectsImg from '@/shared/assets/sidebar/projects.png'
 import tasksImg from '@/shared/assets/sidebar/task_wbs.png'
 import approvalsImg from '@/shared/assets/sidebar/approvals.png'
 import staffImg from '@/shared/assets/sidebar/user.png'
-import teamImg from '@/shared/assets/sidebar/Team.png'
+import teamImg from '@/shared/assets/sidebar/team.png'
 import completeProjectImg from '@/shared/assets/cards/complete-project.png'
 
 import projectActivityImg from '@/shared/assets/projectActivity.png'

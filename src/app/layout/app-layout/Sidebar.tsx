@@ -19,11 +19,11 @@ import assignedTaskImg from '@/shared/assets/sidebar/assignedTask.png'
 import approvalImg from '@/shared/assets/sidebar/approvals.png'
 import userImg from '@/shared/assets/sidebar/user.png'
 import performanceImg from '@/shared/assets/sidebar/performance.png'
-import reportsImg from '@/shared/assets/sidebar/Reports.png'
+import reportsImg from '@/shared/assets/sidebar/reports.png'
 import auditLogsImg from '@/shared/assets/sidebar/auditLogs.png'
 import settingImg from '@/shared/assets/sidebar/setting.png'
 import myTaskImg from '@/shared/assets/sidebar/myTask.png'
-import teamImg from '@/shared/assets/sidebar/Team.png'
+import teamImg from '@/shared/assets/sidebar/team.png'
 import recruitementImg from '@/shared/assets/sidebar/recruitement.png'
 
 interface NavItem {

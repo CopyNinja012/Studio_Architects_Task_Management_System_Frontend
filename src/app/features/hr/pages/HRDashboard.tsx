@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import { PATHS } from '@/router/path'
 import projectActivityImg from '@/shared/assets/projectActivity.png'
-import teamImg from '@/shared/assets/sidebar/Team.png'
+import teamImg from '@/shared/assets/sidebar/team.png'
 import totalEmployeeImg from '@/shared/assets/cards/total_employee12.png'
 import totalTaskImg from '@/shared/assets/cards/total_task1.png'
 import pendingApprovalImg from '@/shared/assets/cards/pending_approvals1.png'
