@@ -36,7 +36,7 @@ export default function HRPerformance() {
           { label: 'Growth Index', value: '+12.5%', icon: <Activity size={16}/>, color: 'text-teal-600', bg: 'bg-teal-50' },
           { label: 'Total Appraisals', value: '38', icon: <Target size={16}/>, color: 'text-teal-700', bg: 'bg-teal-50' },
         ].map(m => (
-          <Card key={m.label} padding="none" className="flex items-center gap-4 p-5 border-none shadow-sm bg-white rounded-[32px]">
+          <Card key={m.label} padding="none" className="flex items-center gap-4 p-5 border-none shadow-sm bg-white rounded-4xl">
             <div className={cn("w-11 h-11 rounded-2xl flex items-center justify-center shrink-0", m.bg, m.color)}>
               {m.icon}
             </div>
@@ -122,7 +122,7 @@ export default function HRPerformance() {
                <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-100">EXCELLENT</span>
              </div>
              <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
-               <div className="h-full bg-primary-olive rounded-full transition-all duration-[2000ms]" style={{ width: '84%' }} />
+               <div className="h-full bg-primary-olive rounded-full transition-all duration-2000" style={{ width: '84%' }} />
              </div>
              <p className="text-[10px] text-text-light mt-3 font-bold italic tracking-tight">Organization is operating at 84% peak structural efficiency.</p>
           </div>
