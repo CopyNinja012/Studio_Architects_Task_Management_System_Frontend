@@ -14,6 +14,7 @@ export function FilePreviewModal({ open, onClose, fileUrl, fileName, fileType }:
   const extension = fileName.split('.').pop()?.toLowerCase()
   const isImage = fileType.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'avif'].includes(extension || '')
   const isPdf = fileType === 'application/pdf' || extension === 'pdf'
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
   const handleDownload = () => {
     const link = document.createElement('a')
@@ -35,22 +36,50 @@ export function FilePreviewModal({ open, onClose, fileUrl, fileName, fileType }:
       footer={
         <div className="flex items-center justify-between w-full px-4">
           <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{fileType} • {extension?.toUpperCase()}</p>
-          <Button 
-            onClick={handleDownload} 
-            icon={<Download size={14} />}
-            className="bg-white/10 hover:bg-white/20 text-white border-white/10 h-9 rounded-xl px-6 font-black"
-          >
-            Download Original
-          </Button>
+          <div className="flex items-center gap-2">
+            {isMobile && isPdf && (
+              <Button 
+                onClick={() => window.open(fileUrl, '_blank')}
+                className="bg-primary-olive text-white h-9 rounded-xl px-4 font-black text-[11px]"
+              >
+                Full Screen View
+              </Button>
+            )}
+            <Button 
+              onClick={handleDownload} 
+              icon={<Download size={14} />}
+              className="bg-white/10 hover:bg-white/20 text-white border-white/10 h-9 rounded-xl px-6 font-black"
+            >
+              Download
+            </Button>
+          </div>
         </div>
       }
     >
       <div className="flex flex-col bg-[#111827] h-full min-h-[80vh]">
-        <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex-1 flex items-center justify-center p-2 sm:p-4">
           {isImage ? (
-            <img src={fileUrl} alt={fileName} className="max-w-full max-h-[75vh] object-contain shadow-2xl rounded-lg animate-in fade-in zoom-in-95 duration-500" />
+            <img src={fileUrl} alt={fileName} className="max-w-full max-h-[80vh] object-contain shadow-2xl rounded-lg animate-in fade-in zoom-in-95 duration-500" />
           ) : isPdf ? (
-            <iframe src={`${fileUrl}#toolbar=0`} className="w-full h-[75vh] rounded-lg shadow-2xl border-none" title={fileName} />
+            <div className="w-full h-[80vh] relative overflow-hidden rounded-lg shadow-2xl">
+              <object
+                data={fileUrl}
+                type="application/pdf"
+                className="w-full h-full border-none"
+              >
+                <iframe
+                  src={`${fileUrl}#toolbar=0`}
+                  className="w-full h-full border-none"
+                  title={fileName}
+                >
+                  <div className="flex flex-col items-center justify-center h-full text-white/40 space-y-4">
+                    <Maximize2 size={40} />
+                    <p className="text-[12px] font-black uppercase tracking-widest">PDF preview not supported</p>
+                    <Button onClick={() => window.open(fileUrl, '_blank')} className="bg-primary-olive">Open in New Tab</Button>
+                  </div>
+                </iframe>
+              </object>
+            </div>
           ) : (
             <div className="text-center space-y-4 py-20">
               <div className="w-24 h-24 rounded-[32px] bg-white/5 border border-white/10 flex items-center justify-center mx-auto shadow-2xl">
