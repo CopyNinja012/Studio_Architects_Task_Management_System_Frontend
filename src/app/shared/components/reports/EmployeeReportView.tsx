@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Fingerprint
 } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/Badge'
+import { Card } from '@/shared/components/ui/Card'
 import { cn } from '@/shared/lib/cn'
 import { useAuthStore } from '@/store'
 import { reportsApi } from '@/features/admin/api/reportsApi'
@@ -75,28 +76,28 @@ export default function EmployeeReportView({ userId, userName, hideToolbar = fal
   }
 
   return (
-    <div className="animate-fade-in pb-20 space-y-12 max-w-[1400px] mx-auto">
+    <div className="animate-fade-in pb-20 space-y-10 max-w-[1400px] mx-auto">
       
-      {/* ── Minimalist Toolbar ────────────────────────────────────────────── */}
+      {/* ── Refactored Toolbar (Cylindrical Box) ────────────────────────── */}
       {!hideToolbar && (
-        <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-2xl bg-primary-olive/10 flex items-center justify-center text-primary-olive">
-              <Fingerprint size={20} />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-[32px] md:rounded-full shadow-sm mx-2">
+          <div className="flex items-center gap-4 px-4">
+            <div className="w-10 h-10 rounded-full bg-primary-olive/10 flex items-center justify-center text-primary-olive text-xl">
+              👤
             </div>
             <div>
-              <p className="text-[10px] font-black text-primary-olive uppercase tracking-[0.2em] mb-0.5">Analytic Dossier</p>
-              <p className="text-sm font-bold text-text-dark">{targetUserName} — {preset.replace('_', ' ')}</p>
+              <p className="text-[9px] font-black text-primary-olive uppercase tracking-[0.2em] mb-0.5 leading-none">Analytic Dossier</p>
+              <p className="text-[13px] font-bold text-text-dark leading-none">{targetUserName}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 p-1 bg-slate-100/50 backdrop-blur-md rounded-2xl border border-slate-200/50">
+          <div className="flex items-center gap-1.5 p-1 bg-slate-100/50 backdrop-blur-md rounded-full border border-slate-200/50 overflow-x-auto no-scrollbar">
             {PRESETS.map(p => (
               <button 
                 key={p.id} 
                 onClick={() => setPreset(p.id)} 
                 className={cn(
-                  "px-5 py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all duration-300", 
+                  "px-6 py-2.5 text-[9px] font-black uppercase tracking-widest rounded-full transition-all duration-300 whitespace-nowrap", 
                   preset === p.id 
                     ? "bg-white text-primary-olive shadow-sm ring-1 ring-black/5" 
                     : "text-text-light hover:text-text-dark"
@@ -108,153 +109,139 @@ export default function EmployeeReportView({ userId, userName, hideToolbar = fal
           </div>
         </div>
       )}
-      {/* ── Intelligence Grid (No Cards) ───────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+      {/* ── Intelligence Cards Grid ────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
-        {/* Left Column: Core Performance Metrics */}
-        <div className="lg:col-span-4 space-y-12">
-          
-          <div className="relative group">
-            <p className="text-[9px] font-black text-text-light uppercase tracking-[0.4em] mb-6 px-1 flex items-center gap-2">
-              <Award size={12} className="text-primary-olive" /> Proficiency Alpha
-            </p>
+        {/* Card 1: Performance Alpha */}
+        <Card className="p-8 rounded-[40px] border-none shadow-premium bg-white group hover:-translate-y-1 transition-all duration-500">
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-2xl">
+              🏆
+            </div>
+            <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[9px] font-black uppercase px-3 py-1">Reliability: {Math.min(100, Math.round((perf?.onTimeDeliveryRate || 0) * 100))}%</Badge>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black text-text-light uppercase tracking-[0.2em]">Efficiency Score</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-8xl font-black text-text-dark tracking-tighter tabular-nums leading-none">
-                {Math.min(100, Math.round(perf?.efficiencyScore || 0))}
-              </span>
-              <span className="text-4xl font-black text-primary-olive">%</span>
-            </div>
-            <p className="text-[11px] font-medium text-text-medium mt-4 leading-relaxed max-w-[240px]">
-              Aggregate score of your execution velocity and delivery accuracy for this period.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-8 pt-6 border-t border-slate-100">
-            <div>
-              <p className="text-[8px] font-black text-text-light uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <TrendingUp size={10} className="text-emerald-500" /> Reliability
-              </p>
-              <p className="text-3xl font-black text-text-dark">{Math.min(100, Math.round((perf?.onTimeDeliveryRate || 0) * 100))}%</p>
-            </div>
-            <div>
-              <p className="text-[8px] font-black text-text-light uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <RotateCcw size={10} className="text-rose-500" /> Quality
-              </p>
-              <p className="text-3xl font-black text-text-dark">{perf?.reworkCount || 0}</p>
+              <h3 className="text-5xl font-black text-text-dark tracking-tighter tabular-nums">{Math.min(100, Math.round(perf?.efficiencyScore || 0))}</h3>
+              <span className="text-xl font-black text-primary-olive">%</span>
             </div>
           </div>
+          <div className="mt-8 pt-6 border-t border-slate-50">
+             <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black text-text-light uppercase tracking-widest">Quality Audit</span>
+                <span className="text-sm font-black text-text-dark">{perf?.reworkCount || 0} Reworks</span>
+             </div>
+             <div className="w-full h-1.5 bg-slate-50 rounded-full mt-3 overflow-hidden">
+                <div 
+                  className="h-full bg-amber-500 rounded-full transition-all duration-1000" 
+                  style={{ width: `${Math.max(10, 100 - (perf?.reworkCount || 0) * 10)}%` }} 
+                />
+             </div>
+          </div>
+        </Card>
 
-          <div className="pt-12">
-             <p className="text-[9px] font-black text-text-light uppercase tracking-[0.4em] mb-6 px-1">Engagement Footprint</p>
-             <div className="flex flex-wrap gap-2">
+        {/* Card 2: Chronometric Audit */}
+        <Card className="p-8 rounded-[40px] border-none shadow-premium bg-white group hover:-translate-y-1 transition-all duration-500">
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-2xl">
+              ⏱️
+            </div>
+            <div className="flex flex-col items-end">
+               <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Actual Hours</p>
+               <p className="text-xl font-black text-text-dark">{work?.totalActualHours.toFixed(1)}h</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+               <span className="text-[10px] font-black text-text-light uppercase tracking-widest">Planned Capacity</span>
+               <span className="text-sm font-black text-text-dark">{work?.totalPlannedHours.toFixed(1)}h</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+               <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                  <p className="text-[8px] font-black text-emerald-600 uppercase mb-1">Completed</p>
+                  <p className="text-xl font-black text-emerald-700">{work?.taskCountByStatus['COMPLETED'] || 0}</p>
+               </div>
+               <div className="p-4 bg-rose-50 rounded-2xl border border-rose-100">
+                  <p className="text-[8px] font-black text-rose-600 uppercase mb-1">Reworks</p>
+                  <p className="text-xl font-black text-rose-700">{work?.taskCountByStatus['REWORK_REQUESTED'] || 0}</p>
+               </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Card 3: Execution Pipeline */}
+        <Card className="p-8 rounded-[40px] border-none shadow-premium bg-white group hover:-translate-y-1 transition-all duration-500">
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-2xl">
+              🚀
+            </div>
+            <p className="text-[10px] font-black text-primary-olive uppercase tracking-[0.2em]">Operational Flow</p>
+          </div>
+          <div className="space-y-6">
+             <div className="relative pl-6 border-l-2 border-emerald-500/20">
+                <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-emerald-500" />
+                <p className="text-[9px] font-black text-emerald-600 uppercase mb-1 tracking-widest">Currently Active</p>
+                <p className="text-[13px] font-bold text-text-dark truncate">{pipe?.currentTask?.taskName || 'No active task'}</p>
+                {pipe?.currentTask && <p className="text-[9px] font-bold text-text-light mt-1">{pipe.currentTask.jobNumber}</p>}
+             </div>
+             <div className="relative pl-6 border-l-2 border-blue-500/20">
+                <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-blue-500" />
+                <p className="text-[9px] font-black text-blue-600 uppercase mb-1 tracking-widest">Scheduled Next</p>
+                <p className="text-[13px] font-bold text-text-dark truncate">{pipe?.nextScheduledTask?.taskName || 'Pipeline Clear'}</p>
+                {pipe?.nextScheduledTask && <p className="text-[9px] font-bold text-text-light mt-1">{pipe.nextScheduledTask.jobNumber}</p>}
+             </div>
+          </div>
+          <div className="mt-8">
+             <Badge className="w-full bg-slate-50 text-slate-500 border-slate-100 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+                📡 System Sync: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+             </Badge>
+          </div>
+        </Card>
+
+      </div>
+
+      {/* ── Engagement Footprint (Modern List) ─────────────────────────────────── */}
+      <div className="mx-2">
+         <Card className="p-8 rounded-[40px] border-none shadow-premium bg-white overflow-hidden relative">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 relative z-10">
+               <div>
+                  <h3 className="text-lg font-black text-text-dark tracking-tight flex items-center gap-3">
+                     <span className="text-2xl">🏗️</span> Project Engagement Footprint
+                  </h3>
+                  <p className="text-xs font-medium text-text-light mt-1">Snapshot of project contributions during this period</p>
+               </div>
+               <div className="flex -space-x-2">
+                  {work?.contributingProjects.slice(0, 5).map((p, i) => (
+                    <div key={p} className={cn(
+                      "w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-black text-white shadow-sm",
+                      i % 3 === 0 ? "bg-primary-olive" : i % 3 === 1 ? "bg-amber-500" : "bg-blue-500"
+                    )}>
+                      {p[0]}
+                    </div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3 relative z-10">
                {work?.contributingProjects.map(p => (
-                 <Badge key={p} className="bg-transparent border border-slate-200 text-text-medium px-4 py-2 rounded-xl text-[11px] font-bold hover:border-primary-olive hover:text-primary-olive transition-colors">
+                 <Badge key={p} className="bg-slate-50 hover:bg-primary-olive hover:text-white transition-all duration-300 border-slate-100 text-text-medium px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest cursor-default">
                    {p}
                  </Badge>
                ))}
                {(!work?.contributingProjects || work.contributingProjects.length === 0) && (
-                 <p className="text-xs text-text-light italic px-1">No active contributions detected.</p>
+                 <div className="w-full py-12 flex flex-col items-center justify-center text-text-light/40 italic">
+                    <span className="text-4xl mb-4">🌫️</span>
+                    <p className="text-sm font-bold uppercase tracking-widest">No active footprints detected</p>
+                 </div>
                )}
-             </div>
-          </div>
-        </div>
+            </div>
 
-        {/* Middle Column: Work Audit (Modern List Style) */}
-        <div className="lg:col-span-4 space-y-12">
-           <p className="text-[9px] font-black text-text-light uppercase tracking-[0.4em] mb-6 px-1 flex items-center gap-2">
-             <Clock size={12} className="text-blue-500" /> Chronometric Audit
-           </p>
-
-           <div className="space-y-6">
-              <div className="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100">
-                 <div>
-                    <p className="text-[8px] font-black text-text-light uppercase mb-1">Planned Capacity</p>
-                    <p className="text-2xl font-black text-text-dark">{work?.totalPlannedHours.toFixed(1)}h</p>
-                 </div>
-                 <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-slate-300">
-                    <History size={20} />
-                 </div>
-              </div>
-
-              <div className="flex items-center justify-between p-6 bg-[#F8FAF5] rounded-3xl border border-primary-olive/10">
-                 <div>
-                    <p className="text-[8px] font-black text-primary-olive uppercase mb-1">Actual Utilization</p>
-                    <p className="text-2xl font-black text-text-dark">{work?.totalActualHours.toFixed(1)}h</p>
-                 </div>
-                 <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary-olive">
-                    <Zap size={20} />
-                 </div>
-              </div>
-           </div>
-
-           <div className="space-y-4 pt-4">
-              {[
-                { label: 'Task Completion', key: 'COMPLETED', color: 'emerald', icon: <CheckCircle2 size={12} /> },
-                { label: 'Under Review', key: 'UNDER_REVIEW', color: 'blue', icon: <History size={12} /> },
-                { label: 'Pending / Assigned', key: 'ASSIGNED', color: 'slate', icon: <PlayCircle size={12} /> },
-                { label: 'Rework Required', key: 'REWORK_REQUESTED', color: 'rose', icon: <AlertCircle size={12} /> },
-              ].map(s => (
-                <div key={s.key} className="flex items-center justify-between px-2 py-3 border-b border-slate-50 group hover:border-primary-olive/20 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className={cn("w-2 h-2 rounded-full", 
-                      s.color === 'emerald' ? 'bg-emerald-500' :
-                      s.color === 'blue' ? 'bg-blue-500' :
-                      s.color === 'rose' ? 'bg-rose-500' :
-                      'bg-slate-300'
-                    )} />
-                    <span className="text-[12px] font-bold text-text-medium uppercase tracking-wide group-hover:text-text-dark transition-colors">{s.label}</span>
-                  </div>
-                  <span className="text-[14px] font-black text-text-dark tabular-nums">{work?.taskCountByStatus[s.key] || 0}</span>
-                </div>
-              ))}
-           </div>
-        </div>
-
-        {/* Right Column: Execution Pipeline */}
-        <div className="lg:col-span-4 space-y-12">
-           <p className="text-[9px] font-black text-text-light uppercase tracking-[0.4em] mb-6 px-1 flex items-center gap-2">
-             <LayoutDashboard size={12} className="text-amber-500" /> Operational Pipeline
-           </p>
-
-           <div className="space-y-8">
-              <div className="relative pl-8 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-emerald-500 before:to-transparent">
-                 <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-emerald-500 ring-4 ring-emerald-50" />
-                 <p className="text-[10px] font-black text-emerald-600 uppercase mb-2">Engaged Currently</p>
-                 {pipe?.currentTask ? (
-                   <>
-                     <h4 className="text-lg font-black text-text-dark leading-snug">{pipe.currentTask.taskName}</h4>
-                     <p className="text-[11px] font-bold text-text-light mt-2">{pipe.currentTask.jobNumber} • {formatDate(pipe.currentTask.plannedStartDate)} - {formatDate(pipe.currentTask.plannedEndDate)}</p>
-                   </>
-                 ) : (
-                    <p className="text-sm font-bold text-text-light italic">No active task engagements detected.</p>
-                 )}
-              </div>
-
-              <div className="relative pl-8 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-blue-400 before:to-transparent">
-                 <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-blue-400 ring-4 ring-blue-50" />
-                 <p className="text-[10px] font-black text-blue-500 uppercase mb-2">Scheduled Next</p>
-                 {pipe?.nextScheduledTask ? (
-                   <>
-                     <h4 className="text-lg font-black text-text-dark leading-snug">{pipe.nextScheduledTask.taskName}</h4>
-                     <p className="text-[11px] font-bold text-text-light mt-2">{pipe.nextScheduledTask.jobNumber} • Starts {formatDate(pipe.nextScheduledTask.plannedStartDate)}</p>
-                   </>
-                 ) : (
-                    <p className="text-sm font-bold text-text-light italic">Operational pipeline is currently clear.</p>
-                 )}
-              </div>
-           </div>
-
-           <div className="mt-12 p-8 bg-primary-olive rounded-[40px] text-white overflow-hidden relative group">
-              <div className="relative z-10">
-                 <p className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 mb-2">Dossier Status</p>
-                 <p className="text-xl font-black">Professional Profile Updated</p>
-                 <p className="text-xs font-medium opacity-60 mt-2">Intelligence sync completed at {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-              </div>
-              <Activity className="absolute -right-4 -bottom-4 w-32 h-32 opacity-10 group-hover:scale-110 transition-transform duration-1000" />
-           </div>
-        </div>
-
+            <Activity className="absolute -right-12 -bottom-12 w-64 h-64 opacity-[0.03] text-primary-olive pointer-events-none" />
+         </Card>
       </div>
+
     </div>
   )
 }

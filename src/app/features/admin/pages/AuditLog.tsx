@@ -185,60 +185,60 @@ export default function AuditLog() {
   return (
     <div className="space-y-6 animate-fade-in pb-8">
       
+      {/* ── Refactored Navigation & Controls (Cylindrical Box) ─────────── */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-[32px] md:rounded-full shadow-sm mx-2">
+        <div className="flex flex-wrap items-center gap-1">
+          {[
+            { id: 'admin', label: 'Administrative Control', icon: <Fingerprint size={14} /> },
+            { id: 'team', label: 'Team Activity Feed', icon: <Users size={14} /> },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => { setActiveTab(tab.id as any); setPage(1); }}
+              className={cn(
+                "flex items-center gap-2.5 px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all rounded-full whitespace-nowrap",
+                activeTab === tab.id 
+                  ? "bg-primary-olive text-white shadow-lg shadow-primary-olive/20" 
+                  : "text-text-light hover:bg-slate-50 hover:text-text-medium"
+              )}
+            >
+              <span className={cn(activeTab === tab.id ? "text-white" : "text-primary-olive")}>{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3 px-4 lg:px-2 pb-2 lg:pb-0">
+          <div className="relative">
+            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-light" />
+            <Input 
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search signatures..." 
+              className="pl-10 h-10 w-48 lg:w-64 rounded-full bg-slate-50 border-transparent focus:bg-white focus:border-primary-olive transition-all"
+            />
+          </div>
+          <Button 
+            variant="ghost" 
+            onClick={handleExport} 
+            className="rounded-full h-10 px-6 border border-slate-200 bg-white font-black uppercase text-[10px] tracking-widest" 
+            icon={<Download size={14} />}
+          >
+            Export
+          </Button>
+          <Button 
+            onClick={fetchLogs} 
+            className="rounded-full h-10 px-6 bg-black hover:bg-black/90 text-white font-black uppercase text-[10px] tracking-widest shadow-xl shadow-black/10" 
+            icon={<RotateCw size={14} />}
+          >
+            Sync
+          </Button>
+        </div>
+      </div>
+
       {/* Main Content Area */}
       <div className="space-y-4">
         <Card padding="none" className="overflow-hidden border-surface-border/60 shadow-xl bg-white rounded-4xl">
-          
-          {/* Professional Tabbed Header */}
-          <div className="px-6 pt-6 pb-0 border-b border-surface-border flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-8 self-stretch md:self-auto">
-               <button 
-                 onClick={() => { setActiveTab('admin'); setPage(1); }}
-                 className={cn(
-                   "pb-4 text-xs font-black uppercase tracking-widest transition-all relative",
-                   activeTab === 'admin' ? "text-primary-olive" : "text-text-light hover:text-text-medium"
-                 )}
-               >
-                 <div className="flex items-center gap-2">
-                   <Fingerprint size={14} />
-                   Administrative Control
-                 </div>
-                 {activeTab === 'admin' && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary-olive rounded-t-full shadow-[0_-2px_10px_rgba(107, 127, 58,0.3)]" />}
-               </button>
-               <button 
-                 onClick={() => { setActiveTab('team'); setPage(1); }}
-                 className={cn(
-                   "pb-4 text-xs font-black uppercase tracking-widest transition-all relative",
-                   activeTab === 'team' ? "text-primary-olive" : "text-text-light hover:text-text-medium"
-                 )}
-               >
-                 <div className="flex items-center gap-2">
-                   <Users size={14} />
-                   Team Activity Feed
-                 </div>
-                 {activeTab === 'team' && <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary-olive rounded-t-full shadow-[0_-2px_10px_rgba(107, 127, 58,0.3)]" />}
-               </button>
-            </div>
-
-            <div className="flex items-center gap-3 pb-4">
-               <div className="relative">
-                  <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-light" />
-                  <Input 
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    placeholder="Search event signature..." 
-                    className="pl-10 h-10 w-64 rounded-2xl bg-surface-hover/50 border-transparent focus:bg-white focus:border-primary-olive transition-all shadow-inner"
-                  />
-               </div>
-               <Button variant="ghost" size="sm" onClick={handleExport} className="h-10 rounded-2xl border border-surface-border bg-white font-black uppercase text-[10px] tracking-widest" icon={<Download size={14} />}>
-                 Export
-               </Button>
-               <Button size="sm" onClick={fetchLogs} className="h-10 rounded-2xl bg-primary-olive text-white shadow-lg shadow-primary-olive/20 font-black uppercase text-[10px] tracking-widest" icon={<RotateCw size={14} />}>
-                 Refresh
-               </Button>
-            </div>
-          </div>
-
           {/* Single Table Implementation */}
           <div className="min-h-100">
             <DataTable 

@@ -251,9 +251,9 @@ export default function HRReports() {
   return (
     <div className="space-y-6 animate-fade-in pb-12">
       
-      {/* ── Tabs Toolbar ─────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-1.5 p-1.5 bg-white rounded-3xl border border-[#E5E7EB] shadow-sm overflow-x-auto no-scrollbar">
+      {/* ── Refactored Navigation & Controls (Cylindrical Box) ─────────── */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-4xl md:rounded-full shadow-sm mx-2">
+        <div className="flex flex-wrap items-center gap-1">
           {[
             { id: 'work', label: 'Work Audit', icon: <Clock size={14} /> },
             { id: 'performance', label: 'Performance Alpha', icon: <TrendingUp size={14} /> },
@@ -263,28 +263,40 @@ export default function HRReports() {
               key={tab.id}
               onClick={() => { setActiveTab(tab.id as ReportTab); setSearch('') }}
               className={cn(
-                "flex items-center gap-2 px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                activeTab === tab.id ? "bg-[#111827] text-white shadow-lg" : "text-text-light hover:text-text-dark hover:bg-slate-50"
+                "flex items-center gap-2.5 px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all rounded-full whitespace-nowrap",
+                activeTab === tab.id 
+                  ? "bg-primary-olive text-white shadow-lg shadow-primary-olive/20" 
+                  : "text-text-light hover:bg-slate-50 hover:text-text-medium"
               )}
             >
-              {tab.icon} {tab.label}
+              <span className={cn(activeTab === tab.id ? "text-white" : "text-primary-olive")}>{tab.icon}</span>
+              {tab.label}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-1.5 p-1.5 bg-[#F3F4F6] rounded-3xl border border-[#E5E7EB] overflow-x-auto no-scrollbar">
-          {PRESETS.map(p => (
-            <button
-              key={p.id}
-              onClick={() => setPreset(p.id)}
-              className={cn(
-                "px-4 py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all whitespace-nowrap",
-                preset === p.id ? "bg-white text-primary-olive shadow-sm ring-1 ring-black/5" : "text-text-light hover:text-text-medium"
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-3 px-4 lg:px-2 pb-2 lg:pb-0">
+          <div className="flex items-center gap-1 p-1 bg-[#F3F4F6] rounded-full border border-[#E5E7EB] overflow-x-auto no-scrollbar">
+            {PRESETS.map(p => (
+              <button
+                key={p.id}
+                onClick={() => setPreset(p.id)}
+                className={cn(
+                  "px-4 py-2 text-[9px] font-black uppercase tracking-widest rounded-full transition-all whitespace-nowrap",
+                  preset === p.id ? "bg-white text-primary-olive shadow-sm ring-1 ring-black/5" : "text-text-light hover:text-text-medium"
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+          <Button 
+            onClick={() => {/* export logic */}}
+            icon={<Download size={14} />} 
+            className="rounded-full h-10 px-6 bg-black hover:bg-black/90 text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-black/10 whitespace-nowrap"
+          >
+            Export
+          </Button>
         </div>
       </div>
 
@@ -306,16 +318,6 @@ export default function HRReports() {
               <Users size={16} />
               <span className="text-[11px] font-bold uppercase tracking-widest">Global Staff Inventory</span>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-             <Button
-                variant="outline"
-                className="h-12 px-6 rounded-2xl font-black uppercase text-[10px] tracking-widest border-slate-200"
-                icon={<Download size={14} />}
-             >
-                Export CSV
-             </Button>
           </div>
         </div>
 
@@ -351,22 +353,6 @@ export default function HRReports() {
           </div>
         )}
       </Modal>
-
-      {/* Info Banner */}
-      <div className="p-6 bg-[#111827] rounded-[40px] text-white flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative group">
-        <div className="relative z-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-2 text-primary-olive">System Integrity Notice</p>
-          <p className="text-xl font-black">Staff intelligence is synchronized in real-time.</p>
-          <p className="text-xs font-medium opacity-60 mt-2 max-w-md">Performance Alphas and Execution velocity are calculated based on task completion accuracy and chronometric variance.</p>
-        </div>
-        <div className="shrink-0 relative z-10">
-           <div className="flex items-center gap-3 px-6 py-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md">
-              <Zap size={16} className="text-primary-olive animate-pulse" />
-              <span className="text-xs font-black uppercase tracking-widest">Active Monitoring</span>
-           </div>
-        </div>
-        <TrendingUp className="absolute -right-8 -bottom-8 w-48 h-48 opacity-5 group-hover:scale-110 transition-transform duration-1000" />
-      </div>
 
     </div>
   )

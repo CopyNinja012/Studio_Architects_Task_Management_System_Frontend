@@ -155,68 +155,58 @@ export default function Approvals() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card padding="none" className="border border-surface-border shadow-sm overflow-visible bg-transparent">
-        
-        {/* ── Toolbar ────────────────────────────────────────────────────────── */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 px-4 py-4 lg:py-3 border-b border-surface-border bg-white rounded-t-2xl relative z-30">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 flex-1 min-w-0">
-            {/* Search */}
-            <div className="relative shrink-0 w-full sm:w-52">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light pointer-events-none" />
-              <input 
-                value={search} 
-                onChange={e => { setSearch(e.target.value); setPage(1) }} 
-                placeholder="Search approvals…" 
-                className="w-full pl-9 pr-3 h-9 text-[12px] border border-surface-border rounded-xl bg-[#F9FAFB] focus:outline-none focus:border-primary-olive focus:ring-4 focus:ring-primary-olive/5 transition-all font-medium placeholder:text-text-light" 
-              />
-            </div>
-
-            <div className="hidden sm:block h-6 w-px bg-surface-border" />
-
-            {/* Status Pills */}
-            <div className="flex items-center gap-1.5 p-1 bg-[#F3F4F6] rounded-xl border border-[#E5E7EB] overflow-x-auto no-scrollbar max-w-full">
-              {([
-                { value: 'UNDER_REVIEW',     label: 'Pending' },
-                { value: 'COMPLETED',        label: 'Approved'        },
-                { value: 'REWORK_REQUESTED', label: 'Rework'          },
-              ] as const).map((s) => (
-                <button
-                  key={s.value}
-                  onClick={() => { setActiveTab(s.value); setPage(1) }}
-                  className={cn(
-                    "px-3 py-1 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all whitespace-nowrap",
-                    activeTab === s.value 
-                      ? "bg-white text-primary-olive shadow-sm ring-1 ring-black/5" 
-                      : "text-text-light hover:text-text-medium"
-                  )}
-                >
-                  {s.label}
-                  <span className="ml-1 text-[8px] opacity-40">
-                    {counts[s.value]}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between lg:justify-end gap-3 shrink-0">
-            {search && (
-              <button 
-                onClick={() => { setSearch(''); setPage(1) }} 
-                className="flex items-center gap-1 text-[11px] font-bold text-red-500 hover:text-red-600 px-2 h-8 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                <X size={12} />
-              </button>
-            )}
-
-            <span className="text-[10px] font-black uppercase tracking-widest text-text-light bg-surface-hover px-2 py-1 rounded-md border border-surface-border">
-              {paginated.length} Items
-            </span>
-          </div>
+      
+      {/* ── Refactored Navigation & Controls (Cylindrical Box) ─────────── */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-[32px] md:rounded-full shadow-sm mx-2">
+        <div className="flex flex-wrap items-center gap-1">
+          {([
+            { id: 'UNDER_REVIEW',     label: 'Pending' },
+            { id: 'COMPLETED',        label: 'Approved' },
+            { id: 'REWORK_REQUESTED', label: 'Rework' },
+          ] as const).map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => { setActiveTab(tab.id); setPage(1); }}
+              className={cn(
+                "flex items-center gap-2.5 px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all rounded-full whitespace-nowrap",
+                activeTab === tab.id 
+                  ? "bg-primary-olive text-white shadow-lg shadow-primary-olive/20" 
+                  : "text-text-light hover:bg-slate-50 hover:text-text-medium"
+              )}
+            >
+              <span className={cn(activeTab === tab.id ? "text-white" : "text-primary-olive")}>
+                {tab.id === 'UNDER_REVIEW' ? <Clock size={14} /> : tab.id === 'COMPLETED' ? <CheckCircle2 size={14} /> : <RotateCcw size={14} />}
+              </span>
+              {tab.label}
+              <span className={cn("ml-1.5 text-[9px] font-bold opacity-60", activeTab === tab.id ? "text-white/60" : "text-text-light")}>
+                {counts[tab.id]}
+              </span>
+            </button>
+          ))}
         </div>
 
+        <div className="flex items-center gap-3 px-4 lg:px-2 pb-2 lg:pb-0">
+          <div className="relative">
+            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-light" />
+            <input 
+              value={search}
+              onChange={e => { setSearch(e.target.value); setPage(1); }}
+              placeholder="Search approvals..." 
+              className="pl-10 h-10 w-48 lg:w-64 rounded-full bg-slate-50 border-transparent focus:bg-white focus:border-primary-olive transition-all text-[12px] font-medium"
+            />
+          </div>
+          <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100">
+             <ClipboardCheck size={14} className="text-primary-olive" />
+             <span className="text-[10px] font-black uppercase tracking-widest text-text-light">
+                {paginated.length} Items
+             </span>
+          </div>
+        </div>
+      </div>
+
+      <Card padding="none" className="border border-surface-border shadow-sm overflow-visible bg-transparent">
         {/* ── Table & Pagination Wrapper ────────────────────────────────────────── */}
-        <div className="rounded-b-2xl overflow-hidden relative z-10 bg-white">
+        <div className="rounded-2xl overflow-hidden relative z-10 bg-white">
           <DataTable 
             columns={columns} 
             data={paginated} 

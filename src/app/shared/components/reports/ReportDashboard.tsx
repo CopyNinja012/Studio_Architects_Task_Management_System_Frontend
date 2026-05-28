@@ -214,54 +214,50 @@ export default function ReportDashboard() {
   return (
     <div className="space-y-6 pb-10">
       
-      {/* ── Header ──────────────────────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2 py-0.5 bg-primary-olive/10 text-primary-olive text-[10px] font-black rounded-md uppercase tracking-widest border border-primary-olive/10">Intelligence Terminal</span>
-            {loading && <span className="flex items-center gap-1.5 text-[9px] font-bold text-primary-olive animate-pulse"><Clock size={10} /> Syncing...</span>}
-          </div>
-          <h1 className="text-3xl font-black text-text-dark tracking-tighter">Strategic Analytics</h1>
-          <p className="text-sm font-medium text-text-light max-w-xl">
-            Comprehensive operational intelligence for resource optimization and project lifecycle tracking.
-          </p>
+      {/* ── Refactored Navigation & Controls (Cylindrical Box) ─────────── */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-2 bg-white border border-[#E5E7EB] rounded-4xl md:rounded-full shadow-sm mx-2">
+        <div className="flex flex-wrap items-center gap-1">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as ReportType)}
+              className={cn(
+                "flex items-center gap-2.5 px-6 py-3 text-[10px] font-black uppercase tracking-widest transition-all rounded-full",
+                activeTab === tab.id 
+                  ? "bg-primary-olive text-white shadow-lg shadow-primary-olive/20" 
+                  : "text-text-light hover:bg-slate-50 hover:text-text-medium"
+              )}
+            >
+              <span className={cn(activeTab === tab.id ? "text-white" : "text-primary-olive")}>{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 p-1.5 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm">
+        <div className="flex items-center gap-3 px-4 lg:px-2 pb-2 lg:pb-0">
+          {loading && (
+            <div className="hidden sm:flex items-center gap-1.5 text-[9px] font-bold text-primary-olive animate-pulse mr-2">
+              <Clock size={10} /> Syncing...
+            </div>
+          )}
+          <div className="flex items-center gap-2 p-1.5 bg-slate-50 border border-[#E5E7EB] rounded-full flex-1 sm:flex-none">
             <Calendar size={14} className="text-text-light ml-2" />
             <select 
               value={preset} 
               onChange={e => setPreset(e.target.value as any)}
-              className="bg-transparent text-[11px] font-black text-text-dark outline-none pr-4 cursor-pointer"
+              className="bg-transparent text-[10px] font-black text-text-dark outline-none pr-4 cursor-pointer uppercase tracking-wider w-full sm:w-auto"
             >
               {PRESETS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
             </select>
           </div>
-          <Button variant="ghost" icon={<Download size={14} />} className="rounded-2xl h-12 border border-[#E5E7EB] font-bold">Export</Button>
-        </div>
-      </div>
-
-      {/* ── Tabs Navigation ─────────────────────────────────────────────── */}
-      <div className="flex items-center gap-1 border-b border-[#F1F5F9] px-2">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as ReportType)}
-            className={cn(
-              "flex items-center gap-2.5 px-6 py-4 text-[11px] font-black uppercase tracking-widest transition-all relative",
-              activeTab === tab.id 
-                ? "text-primary-olive" 
-                : "text-text-light hover:text-text-medium"
-            )}
+          <Button 
+            onClick={() => {/* export logic */}}
+            icon={<Download size={14} />} 
+            className="rounded-full h-10 px-6 bg-black hover:bg-black/90 text-white font-black text-[10px] uppercase tracking-widest shadow-xl shadow-black/10"
           >
-            {tab.icon}
-            {tab.label}
-            {activeTab === tab.id && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-olive animate-in fade-in duration-300" />
-            )}
-          </button>
-        ))}
+            Export
+          </Button>
+        </div>
       </div>
 
       {/* ── Table Container ─────────────────────────────────────────────── */}
