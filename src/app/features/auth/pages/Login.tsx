@@ -126,6 +126,7 @@ export default function Login() {
                 <input
                   {...register('email')}
                   type="email"
+                  autoComplete="email"
                   placeholder="name@studioarchitects.com"
                   className={cn(
                     "w-full pl-14 pr-4 py-4 rounded-xl border border-transparent bg-[#F5F7F2] text-sm font-semibold transition-all duration-300 outline-none shadow-inner",
@@ -153,6 +154,7 @@ export default function Login() {
                 <input
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
                   placeholder="••••••••"
                   className={cn(
                     "w-full pl-14 pr-12 py-4 rounded-xl border border-transparent bg-[#F5F7F2] text-sm font-semibold transition-all duration-300 outline-none shadow-inner",
