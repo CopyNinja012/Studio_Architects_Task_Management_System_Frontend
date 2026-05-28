@@ -81,7 +81,15 @@ export const taskApi = {
 
   // ── Admin reviews (approve / rework) ───────────────────────────────────────
   reviewTask: async (taskId: string, data: ReviewTaskRequest): Promise<TaskApi> => {
-    const res = await apiClient.post<ApiResponse<TaskApi>>(`${BASE}/${taskId}/review`, data)
+    const formData = new FormData()
+    
+    // The backend expects "review" part to be a JSON blob (MediaType.APPLICATION_JSON)
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+    formData.append('review', blob, 'review.json')
+
+    const res = await apiClient.post<ApiResponse<TaskApi>>(`${BASE}/${taskId}/review`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
     return res.data.data
   },
 
