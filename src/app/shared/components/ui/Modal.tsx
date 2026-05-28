@@ -16,6 +16,7 @@ interface ModalProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
   className?: string
   padding?: 'none' | 'sm' | 'md' | 'lg'
+  headerPadding?: 'none' | 'sm' | 'md' | 'lg'
 }
 
 const sizes = {
@@ -37,7 +38,8 @@ export function Modal({
   footer, 
   size = 'md', 
   className, 
-  padding = 'md' 
+  padding = 'md',
+  headerPadding = 'md'
 }: ModalProps) {
   
   // Handle Background Scroll Locking
@@ -59,7 +61,7 @@ export function Modal({
   return createPortal(
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden">
           
           {/* ── Overlay / Backdrop ── */}
           <motion.div
@@ -89,24 +91,42 @@ export function Modal({
           >
             {/* Premium Header */}
             {(title || subtitle) && (
-              <div className="flex items-center justify-between px-8 py-4 border-b border-primary-100 bg-primary-50/30 shrink-0">
+              <div className={cn(
+                "flex items-center justify-between border-b border-primary-100 bg-primary-50/30 shrink-0",
+                headerPadding === 'none' ? 'p-0' :
+                headerPadding === 'sm' ? 'px-6 py-2' :
+                headerPadding === 'lg' ? 'px-10 py-6' :
+                'px-8 py-4'
+              )}>
                 <div className="flex items-center gap-4">
                   {icon && (
-                    <div className="w-10 h-10 rounded-[16px] bg-white flex items-center justify-center border border-primary-100 shadow-sm shrink-0">
+                    <div className={cn(
+                      "rounded-2xl bg-white flex items-center justify-center border border-primary-100 shadow-sm shrink-0",
+                      headerPadding === 'sm' ? 'w-8 h-8 rounded-xl' : 'w-10 h-10'
+                    )}>
                       <span className="text-primary-olive">{icon}</span>
                     </div>
                   )}
                   <div className="space-y-0.5">
-                    <h2 className="text-[18px] font-black text-text-dark tracking-tight leading-tight">{title}</h2>
-                    {subtitle && <div className="text-[9px] font-black text-primary-olive uppercase tracking-[0.15em] leading-none">{subtitle}</div>}
+                    <h2 className={cn(
+                      "font-black text-text-dark tracking-tight leading-tight",
+                      headerPadding === 'sm' ? 'text-[15px]' : 'text-[18px]'
+                    )}>{title}</h2>
+                    {subtitle && <div className={cn(
+                      "font-black text-primary-olive uppercase tracking-[0.15em] leading-none",
+                      headerPadding === 'sm' ? 'text-[8px]' : 'text-[9px]'
+                    )}>{subtitle}</div>}
                   </div>
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 rounded-xl hover:bg-rose-50 text-text-light hover:text-rose-600 transition-all border border-transparent hover:border-rose-100 flex items-center justify-center shrink-0 group"
+                  className={cn(
+                    "rounded-xl hover:bg-rose-50 text-text-light hover:text-rose-600 transition-all border border-transparent hover:border-rose-100 flex items-center justify-center shrink-0 group",
+                    headerPadding === 'sm' ? 'w-7 h-7 rounded-lg' : 'w-8 h-8'
+                  )}
                   aria-label="Close modal"
                 >
-                  <X size={18} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
+                  <X size={headerPadding === 'sm' ? 16 : 18} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
                 </button>
               </div>
             )}

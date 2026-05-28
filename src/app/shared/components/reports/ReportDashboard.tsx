@@ -1,149 +1,345 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Users, Search, ChevronDown, UserCheck } from 'lucide-react'
-import { adminApi } from '@/features/admin/api/adminApi'
-import type { AdminUser } from '@/features/admin/model/types'
-import EmployeeReportView from './EmployeeReportView'
+import { 
+  BarChart3, Users, LayoutDashboard, Target, 
+  Calendar, Search, Download, Filter, 
+  ChevronRight, ArrowUpRight, Clock, AlertCircle
+} from 'lucide-react'
+import { reportsApi } from '@/features/admin/api/reportsApi'
+import { useAuthStore } from '@/store'
 import { cn } from '@/shared/lib/cn'
-import { Avatar } from '@/shared/components/ui/Avatar'
-import { PageLoader } from '@/shared/components/ui/Loader'
+import { formatDate } from '@/shared/lib/date'
+import { DataTable, type Column } from '../table/DataTable'
+import { Button } from '../ui/Button'
+import { toast } from 'sonner'
+import type { 
+  ProjectReportResponse, 
+  EmployeeWorkReportResponse, 
+  EmployeePipelineReportResponse, 
+  EmployeePerformanceReportResponse,
+  DateRangePreset,
+  DateRangeRequest
+} from '@/features/admin/model/types'
+
+type ReportType = 'PROJECTS' | 'WORK' | 'PIPELINE' | 'PERFORMANCE'
+
+const PRESETS: { id: DateRangePreset; label: string }[] = [
+  { id: 'TODAY', label: 'Today' },
+  { id: 'YESTERDAY', label: 'Yesterday' },
+  { id: 'THIS_WEEK', label: 'This Week' },
+  { id: 'LAST_WEEK', label: 'Last Week' },
+  { id: 'THIS_MONTH', label: 'This Month' },
+  { id: 'LAST_MONTH', label: 'Last Month' },
+  { id: 'THIS_YEAR', label: 'This Year' },
+]
 
 export default function ReportDashboard() {
-  const [employees, setEmployees] = useState<AdminUser[]>([])
-  const [loading, setLoading] = useState(true)
+  const { user } = useAuthStore()
+  const isHR = user?.roles?.includes('HR') ?? false
+  
+  const [activeTab, setActiveTab] = useState<ReportType>(isHR ? 'WORK' : 'PROJECTS')
+  const [preset, setPreset] = useState<DateRangePreset>('THIS_MONTH')
   const [search, setSearch] = useState('')
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  // Data states
+  const [projectsData, setProjectsData] = useState<ProjectReportResponse[]>([])
+  const [workData, setWorkData] = useState<EmployeeWorkReportResponse[]>([])
+  const [pipelineData, setPipelineData] = useState<EmployeePipelineReportResponse[]>([])
+  const [performanceData, setPerformanceData] = useState<EmployeePerformanceReportResponse[]>([])
+
+  const fetchReport = async () => {
+    setLoading(true)
+    const params: DateRangeRequest = { preset }
+    try {
+      switch (activeTab) {
+        case 'PROJECTS':
+          const pData = await reportsApi.getProjectsSummary(params)
+          setProjectsData(pData)
+          break
+        case 'WORK':
+          const wData = await reportsApi.getEmployeesWork(params)
+          setWorkData(wData)
+          break
+        case 'PIPELINE':
+          const piData = await reportsApi.getEmployeesPipeline()
+          setPipelineData(piData)
+          break
+        case 'PERFORMANCE':
+          const perfData = await reportsApi.getEmployeesPerformance(params)
+          setPerformanceData(perfData)
+          break
+      }
+    } catch (err) {
+      toast.error('Failed to fetch report data')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    adminApi.getUsers(0, 1000)
-      .then(res => {
-        setEmployees(res.content)
-        if (res.content.length > 0) {
-          setSelectedId(res.content[0].id)
-        }
-      })
-      .finally(() => setLoading(false))
-  }, [])
+    fetchReport()
+  }, [activeTab, preset])
 
-  const filtered = useMemo(() => {
-    return employees.filter(e => 
-      e.name.toLowerCase().includes(search.toLowerCase()) ||
-      e.email.toLowerCase().includes(search.toLowerCase())
-    )
-  }, [employees, search])
+  const filteredData = useMemo(() => {
+    const s = search.toLowerCase()
+    switch (activeTab) {
+      case 'PROJECTS':
+        return projectsData.filter(p => p.projectName.toLowerCase().includes(s) || p.jobNumber.toLowerCase().includes(s))
+      case 'WORK':
+        return workData.filter(w => w.userName.toLowerCase().includes(s) || w.email.toLowerCase().includes(s))
+      case 'PIPELINE':
+        return pipelineData.filter(p => p.userName.toLowerCase().includes(s) || p.email.toLowerCase().includes(s))
+      case 'PERFORMANCE':
+        return performanceData.filter(p => p.userName.toLowerCase().includes(s) || p.email.toLowerCase().includes(s))
+      default:
+        return []
+    }
+  }, [activeTab, search, projectsData, workData, pipelineData, performanceData])
 
-  const selectedUser = useMemo(() => 
-    employees.find(e => e.id === selectedId), 
-    [employees, selectedId]
-  )
+  // ─── Column Definitions ───────────────────────────────────────────────────
 
-  if (loading) return <PageLoader />
+  const projectColumns: Column<ProjectReportResponse>[] = [
+    { key: 'projectName', header: 'Project Name', render: r => (
+      <div className="flex flex-col">
+        <span className="font-black text-text-dark">{r.projectName}</span>
+        <span className="text-[10px] text-text-light uppercase tracking-tighter">ID: {r.projectId.slice(0, 8)}</span>
+      </div>
+    )},
+    { key: 'jobNumber', header: 'Job Number', render: r => <span className="font-bold text-primary-olive">{r.jobNumber}</span> },
+    { key: 'totalTasks', header: 'Total Tasks', render: r => <span className="font-black">{r.report.totalTasks}</span>, align: 'center' },
+    { key: 'delayedTasks', header: 'Delayed', render: r => (
+      <span className={cn("font-black", r.report.delayedTasksCount > 0 ? "text-rose-500" : "text-emerald-500")}>
+        {r.report.delayedTasksCount}
+      </span>
+    ), align: 'center' },
+    { key: 'completedTasks', header: 'Completed', render: r => <span className="font-black text-emerald-600">{r.report.completedTasks}</span>, align: 'center' },
+    { key: 'percentage', header: 'Completion %', render: r => (
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden w-24">
+          <div 
+            className="h-full bg-primary-olive rounded-full" 
+            style={{ width: `${Math.round(r.report.completionPercentage * 100)}%` }} 
+          />
+        </div>
+        <span className="text-xs font-black">{Math.round(r.report.completionPercentage * 100)}%</span>
+      </div>
+    ), align: 'right' },
+  ]
+
+  const workColumns: Column<EmployeeWorkReportResponse>[] = [
+    { key: 'userName', header: 'Employee', render: r => (
+      <div className="flex flex-col">
+        <span className="font-black text-text-dark">{r.userName}</span>
+        <span className="text-[10px] text-text-light uppercase tracking-tighter">{r.email}</span>
+      </div>
+    )},
+    { key: 'completed', header: 'Complete', render: r => <span className="font-black text-emerald-600">{r.report.taskCountByStatus['COMPLETED'] || 0}</span>, align: 'center' },
+    { key: 'underReview', header: 'Review', render: r => <span className="font-black text-blue-600">{r.report.taskCountByStatus['UNDER_REVIEW'] || 0}</span>, align: 'center' },
+    { key: 'assigned', header: 'Assigned', render: r => <span className="font-black text-slate-500">{r.report.taskCountByStatus['ASSIGNED'] || 0}</span>, align: 'center' },
+    { key: 'rework', header: 'Rework', render: r => <span className="font-black text-orange-500">{r.report.taskCountByStatus['REWORK_REQUESTED'] || 0}</span>, align: 'center' },
+    { key: 'projects', header: 'Contributing Projects', render: r => (
+      <div className="flex flex-wrap gap-1 max-w-xs">
+        {r.report.contributingProjects.slice(0, 2).map(p => (
+          <span key={p} className="px-2 py-0.5 bg-slate-100 text-[9px] font-bold rounded uppercase truncate">{p}</span>
+        ))}
+        {r.report.contributingProjects.length > 2 && (
+          <span className="text-[9px] text-text-light font-bold">+{r.report.contributingProjects.length - 2} more</span>
+        )}
+      </div>
+    )},
+  ]
+
+  const pipelineColumns: Column<EmployeePipelineReportResponse>[] = [
+    { key: 'userName', header: 'Employee', render: r => (
+      <div className="flex flex-col">
+        <span className="font-black text-text-dark">{r.userName}</span>
+        <span className="text-[10px] text-text-light uppercase tracking-tighter">{r.email}</span>
+      </div>
+    )},
+    { key: 'currentTask', header: 'Current Task', render: r => r.report.currentTask ? (
+      <div className="flex flex-col max-w-50">
+        <span className="font-bold text-text-dark truncate">{r.report.currentTask.taskName}</span>
+        <span className="text-[9px] text-primary-olive font-black uppercase">{r.report.currentTask.jobNumber}</span>
+        <span className="text-[9px] text-text-light">{formatDate(r.report.currentTask.plannedStartDate)} → {formatDate(r.report.currentTask.plannedEndDate)}</span>
+      </div>
+    ) : <span className="text-[10px] text-text-light italic">No Active Task</span> },
+    { key: 'nextTask', header: 'Next Scheduled', render: r => r.report.nextScheduledTask ? (
+      <div className="flex flex-col max-w-50">
+        <span className="font-bold text-text-dark truncate">{r.report.nextScheduledTask.taskName}</span>
+        <span className="text-[9px] text-blue-500 font-black uppercase">{r.report.nextScheduledTask.jobNumber}</span>
+        <span className="text-[9px] text-text-light">{formatDate(r.report.nextScheduledTask.plannedStartDate)} → {formatDate(r.report.nextScheduledTask.plannedEndDate)}</span>
+      </div>
+    ) : <span className="text-[10px] text-text-light italic">Queue Clear</span> },
+  ]
+
+  const performanceColumns: Column<EmployeePerformanceReportResponse>[] = [
+    { key: 'userName', header: 'Employee', render: r => (
+      <div className="flex flex-col">
+        <span className="font-black text-text-dark">{r.userName}</span>
+        <span className="text-[10px] text-text-light uppercase tracking-tighter">{r.email}</span>
+      </div>
+    )},
+    { key: 'efficiency', header: 'Efficiency Score', render: r => (
+      <div className="flex items-center gap-2">
+        <div className={cn(
+          "px-2 py-0.5 rounded text-[10px] font-black",
+          r.report.efficiencyScore >= 80 ? "bg-emerald-100 text-emerald-700" :
+          r.report.efficiencyScore >= 50 ? "bg-amber-100 text-amber-700" : "bg-rose-100 text-rose-700"
+        )}>
+          {Math.round(r.report.efficiencyScore)}%
+        </div>
+      </div>
+    ), align: 'center' },
+    { key: 'rework', header: 'Rework Count', render: r => <span className="font-black">{r.report.reworkCount}</span>, align: 'center' },
+    { key: 'onTime', header: 'On-Time Delivery', render: r => (
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden w-24">
+          <div 
+            className="h-full bg-blue-500 rounded-full" 
+            style={{ width: `${Math.round(r.report.onTimeDeliveryRate * 100)}%` }} 
+          />
+        </div>
+        <span className="text-xs font-black">{Math.round(r.report.onTimeDeliveryRate * 100)}%</span>
+      </div>
+    ), align: 'right' },
+  ]
+
+  const tabs = [
+    { id: 'PROJECTS', label: 'Project Reports', icon: <BarChart3 size={16} />, hide: isHR },
+    { id: 'WORK', label: 'Employee Work', icon: <Users size={16} /> },
+    { id: 'PIPELINE', label: 'Staff Pipeline', icon: <LayoutDashboard size={16} /> },
+    { id: 'PERFORMANCE', label: 'Performance', icon: <Target size={16} /> },
+  ].filter(t => !t.hide)
 
   return (
-    <div className="space-y-12 animate-fade-in pb-10">
+    <div className="space-y-6 pb-10">
       
-      {/* ── Selection Header ────────────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-[20px] bg-primary-olive/10 flex items-center justify-center text-primary-olive">
-            <Users size={24} />
+      {/* ── Header ──────────────────────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2 py-0.5 bg-primary-olive/10 text-primary-olive text-[10px] font-black rounded-md uppercase tracking-widest border border-primary-olive/10">Intelligence Terminal</span>
+            {loading && <span className="flex items-center gap-1.5 text-[9px] font-bold text-primary-olive animate-pulse"><Clock size={10} /> Syncing...</span>}
           </div>
-          <div>
-            <h1 className="text-2xl font-black text-text-dark tracking-tight">Talent Intelligence</h1>
-            <p className="text-[11px] font-bold text-text-light uppercase tracking-widest mt-0.5">Global Staff Performance Analytics</p>
-          </div>
+          <h1 className="text-3xl font-black text-text-dark tracking-tighter">Strategic Analytics</h1>
+          <p className="text-sm font-medium text-text-light max-w-xl">
+            Comprehensive operational intelligence for resource optimization and project lifecycle tracking.
+          </p>
         </div>
 
-        {/* Custom Modern Dropdown */}
-        <div className="relative w-full md:w-80">
-          <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="w-full flex items-center justify-between gap-3 px-5 h-14 bg-white border border-[#E5E7EB] rounded-2xl hover:border-primary-olive/30 hover:shadow-premium transition-all text-left group"
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <Avatar name={selectedUser?.name || '?'} size="sm" className="ring-2 ring-white" />
-              <div className="min-w-0">
-                <p className="text-xs font-black text-[#111827] truncate">
-                  {selectedUser?.name || 'Select Employee'}
-                </p>
-                <p className="text-[10px] font-bold text-text-light truncate uppercase tracking-tighter">
-                  {selectedUser?.roles?.[0]?.replace('_', ' ') || 'Consultant'}
-                </p>
-              </div>
-            </div>
-            <ChevronDown size={18} className={cn("text-text-light transition-transform duration-300", isDropdownOpen && "rotate-180")} />
-          </button>
-
-          {isDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-[#E5E7EB] rounded-3xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              <div className="p-3 border-b border-[#F1F5F9]">
-                <div className="relative">
-                  <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light" />
-                  <input
-                    autoFocus
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    placeholder="Search name or email..."
-                    className="w-full pl-9 pr-3 h-10 bg-slate-50 border-none rounded-xl text-xs font-bold text-text-dark focus:ring-2 focus:ring-primary-olive/10 outline-none"
-                  />
-                </div>
-              </div>
-              <div className="max-h-64 overflow-y-auto p-2 space-y-1 custom-scrollbar">
-                {filtered.map(emp => (
-                  <button
-                    key={emp.id}
-                    onClick={() => {
-                      setSelectedId(emp.id)
-                      setIsDropdownOpen(false)
-                    }}
-                    className={cn(
-                      "w-full flex items-center gap-3 p-2.5 rounded-xl transition-all text-left",
-                      selectedId === emp.id ? "bg-primary-olive text-white" : "hover:bg-slate-50 text-text-dark"
-                    )}
-                  >
-                    <Avatar name={emp.name} size="sm" className={cn("ring-2", selectedId === emp.id ? "ring-primary-olive" : "ring-white")} />
-                    <div className="min-w-0">
-                      <p className={cn("text-[11.5px] font-black truncate", selectedId === emp.id ? "text-white" : "text-[#111827]")}>
-                        {emp.name}
-                      </p>
-                      <p className={cn("text-[9px] font-bold uppercase tracking-tighter truncate opacity-70", selectedId === emp.id ? "text-white/80" : "text-text-light")}>
-                        {emp.email}
-                      </p>
-                    </div>
-                    {selectedId === emp.id && <UserCheck size={14} className="ml-auto shrink-0" />}
-                  </button>
-                ))}
-                {filtered.length === 0 && (
-                  <div className="py-8 text-center">
-                    <p className="text-[11px] font-bold text-text-light italic">No matches found</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 p-1.5 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm">
+            <Calendar size={14} className="text-text-light ml-2" />
+            <select 
+              value={preset} 
+              onChange={e => setPreset(e.target.value as any)}
+              className="bg-transparent text-[11px] font-black text-text-dark outline-none pr-4 cursor-pointer"
+            >
+              {PRESETS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
+            </select>
+          </div>
+          <Button variant="ghost" icon={<Download size={14} />} className="rounded-2xl h-12 border border-[#E5E7EB] font-bold">Export</Button>
         </div>
       </div>
 
-      <div className="h-px bg-linear-to-r from-transparent via-[#E5E7EB] to-transparent mx-4" />
+      {/* ── Tabs Navigation ─────────────────────────────────────────────── */}
+      <div className="flex items-center gap-1 border-b border-[#F1F5F9] px-2">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as ReportType)}
+            className={cn(
+              "flex items-center gap-2.5 px-6 py-4 text-[11px] font-black uppercase tracking-widest transition-all relative",
+              activeTab === tab.id 
+                ? "text-primary-olive" 
+                : "text-text-light hover:text-text-medium"
+            )}
+          >
+            {tab.icon}
+            {tab.label}
+            {activeTab === tab.id && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-olive animate-in fade-in duration-300" />
+            )}
+          </button>
+        ))}
+      </div>
 
-      {/* ── Individual Report View ──────────────────────────────────────── */}
-      {selectedId && selectedUser ? (
-        <EmployeeReportView 
-          key={selectedId} 
-          userId={selectedId} 
-          userName={selectedUser.name} 
-        />
-      ) : (
-        <div className="py-32 flex flex-col items-center justify-center text-center space-y-4">
-           <div className="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-300">
-              <Users size={32} />
-           </div>
-           <div>
-              <p className="text-lg font-black text-text-dark">No Selection Detected</p>
-              <p className="text-sm font-medium text-text-light max-w-xs">Please choose an employee from the dropdown above to synchronize their performance data.</p>
-           </div>
+      {/* ── Table Container ─────────────────────────────────────────────── */}
+      <div className="bg-white rounded-4xl border border-[#E5E7EB] shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-500">
+        
+        {/* Table Toolbar */}
+        <div className="p-4 border-b border-[#F1F5F9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative flex-1 max-w-md">
+            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-light" />
+            <input 
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search reports by keyword..."
+              className="w-full h-11 pl-11 pr-4 bg-slate-50 border-none rounded-2xl text-[13px] font-medium text-text-dark placeholder:text-text-light/60 focus:ring-2 focus:ring-primary-olive/10 outline-none"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+             <div className="px-3 py-1.5 bg-primary-50 text-primary-olive text-[10px] font-black rounded-lg uppercase tracking-tighter">
+               {filteredData.length} records found
+             </div>
+             <Button variant="ghost" className="w-10 h-10 p-0 rounded-xl border border-slate-100">
+                <Filter size={14} />
+             </Button>
+          </div>
         </div>
-      )}
+
+        {/* Data Table */}
+        <DataTable
+          loading={loading}
+          data={filteredData}
+          rowKey={(r: any) => r.projectId || r.userId}
+          columns={
+            activeTab === 'PROJECTS' ? projectColumns as any :
+            activeTab === 'WORK' ? workColumns as any :
+            activeTab === 'PIPELINE' ? pipelineColumns as any :
+            performanceColumns as any
+          }
+          className="min-h-100"
+          emptyMessage={`No ${activeTab.toLowerCase()} data available for this period.`}
+        />
+      </div>
+
+      {/* ── Insights Footer ────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-2">
+        <div className="p-6 bg-primary-50 rounded-[28px] border border-primary-100 flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary-olive shadow-sm group-hover:scale-110 transition-transform">
+            <BarChart3 size={20} />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-primary-olive uppercase tracking-[0.2em] mb-0.5">Overall Efficiency</p>
+            <p className="text-2xl font-black text-text-dark">84.2%</p>
+          </div>
+          <ArrowUpRight size={16} className="ml-auto text-emerald-500" />
+        </div>
+        
+        <div className="p-6 bg-blue-50 rounded-[28px] border border-blue-100 flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-blue-600 shadow-sm group-hover:scale-110 transition-transform">
+            <Clock size={20} />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-blue-600 uppercase tracking-[0.2em] mb-0.5">On-Time Delivery</p>
+            <p className="text-2xl font-black text-text-dark">91.8%</p>
+          </div>
+          <ArrowUpRight size={16} className="ml-auto text-emerald-500" />
+        </div>
+
+        <div className="p-6 bg-rose-50 rounded-[28px] border border-rose-100 flex items-center gap-4 group">
+          <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-rose-600 shadow-sm group-hover:scale-110 transition-transform">
+            <AlertCircle size={20} />
+          </div>
+          <div>
+            <p className="text-[9px] font-black text-rose-600 uppercase tracking-[0.2em] mb-0.5">Active Impediments</p>
+            <p className="text-2xl font-black text-text-dark">04</p>
+          </div>
+          <ChevronRight size={16} className="ml-auto text-text-light" />
+        </div>
+      </div>
+
     </div>
   )
 }
