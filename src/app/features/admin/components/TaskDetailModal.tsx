@@ -113,22 +113,18 @@ export function TaskDetailModal({ id, open, onClose, onTaskUpdated, hideActions 
   const handleFilePreview = async (file: TaskAttachmentResponse) => {
     if (!task) return
     
-    // For images and PDFs, we can open them directly in a new tab to let the browser's native viewer handle it
-    // since the backend is already sending "inline" disposition for these types.
-    if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
-      const url = taskApi.getAttachmentUrl(task.id, file.id)
-      window.open(url, '_blank')
-      return
-    }
-
     try {
-      const blobRes = await fetch(taskApi.getAttachmentUrl(task.id, file.id), {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-        }
-      })
-      const blob = await blobRes.blob()
+      // We fetch the blob first using apiClient (which includes the ngrok bypass header)
+      const blob = await taskApi.getAttachmentBlob(task.id, file.id)
       const url = window.URL.createObjectURL(blob)
+      
+      // For images and PDFs, we open the blob URL in a new tab
+      if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
+        window.open(url, '_blank')
+        return
+      }
+
+      // For other files, use the preview modal
       setPreviewFile({ url, name: file.fileName, type: file.fileType })
     } catch (err) {
       toast.error('Failed to load file preview')

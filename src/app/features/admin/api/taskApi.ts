@@ -115,6 +115,13 @@ export const taskApi = {
     return res.data.data
   },
 
+  getAttachmentBlob: async (taskId: string, attachmentId: string): Promise<Blob> => {
+    const res = await apiClient.get(`${BASE}/${taskId}/attachments/${attachmentId}/download`, {
+      responseType: 'blob'
+    })
+    return res.data
+  },
+
   downloadAttachment: async (taskId: string, attachmentId: string): Promise<void> => {
     const res = await apiClient.get(`${BASE}/${taskId}/attachments/${attachmentId}/download`, {
       responseType: 'blob'
