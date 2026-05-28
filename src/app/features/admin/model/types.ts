@@ -351,7 +351,7 @@ export interface CreateTaskRequest {
 
 export interface ReviewTaskRequest {
   approved: boolean
-  remarks: string
+  reviewComment: string
 }
 
 // ─── Reports & Analytics ───────────────────────────────────────────────────

@@ -79,7 +79,7 @@ export function TaskDetailModal({ id, open, onClose, onTaskUpdated, hideActions 
     if (!task) return
     setActionLoading(true)
     try {
-      const updated = await taskApi.reviewTask(task.id, { approved: true, remarks: 'Approved' })
+      const updated = await taskApi.reviewTask(task.id, { approved: true, reviewComment: 'Approved' })
       setTask(updated)
       toast.success('Task approved successfully')
       onTaskUpdated?.(updated)
@@ -98,7 +98,7 @@ export function TaskDetailModal({ id, open, onClose, onTaskUpdated, hideActions 
     }
     setActionLoading(true)
     try {
-      const updated = await taskApi.reviewTask(task.id, { approved: false, remarks: reworkRemark })
+      const updated = await taskApi.reviewTask(task.id, { approved: false, reviewComment: reworkRemark })
       setTask(updated)
       toast.success('Task sent back for rework')
       setShowReworkInput(false)

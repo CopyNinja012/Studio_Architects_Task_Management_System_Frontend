@@ -81,7 +81,7 @@ export default function Approvals() {
   const handleApprove = async (task: TaskApi) => {
     setApprovingId(task.id)
     try {
-      const updated = await taskApi.reviewTask(task.id, { approved: true, remarks: 'Approved' })
+      const updated = await taskApi.reviewTask(task.id, { approved: true, reviewComment: 'Approved' })
       setTasks(prev => prev.map(t => t.id === task.id ? updated : t))
       toast.success('Task approved successfully')
     } catch {
@@ -94,7 +94,7 @@ export default function Approvals() {
   const handleRework = async (note: string) => {
     if (!reworkTask) return
     try {
-      const updated = await taskApi.reviewTask(reworkTask.id, { approved: false, remarks: note })
+      const updated = await taskApi.reviewTask(reworkTask.id, { approved: false, reviewComment: note })
       setTasks(prev => prev.map(t => t.id === reworkTask.id ? updated : t))
       toast.success('Task sent back for rework')
     } catch {
