@@ -25,8 +25,17 @@ const PRESETS: { id: DateRangePreset; label: string }[] = [
   { id: 'THIS_YEAR',   label: 'This Year' },
 ]
 
-export default function EmployeeReportView() {
-  const { user } = useAuthStore()
+interface EmployeeReportViewProps {
+  userId?: string
+  userName?: string
+  hideToolbar?: boolean
+}
+
+export default function EmployeeReportView({ userId, userName, hideToolbar = false }: EmployeeReportViewProps) {
+  const { user: authUser } = useAuthStore()
+  const targetUserId = userId || authUser?.id
+  const targetUserName = userName || authUser?.name
+
   const [preset, setPreset] = useState<DateRangePreset>('THIS_MONTH')
   const [loading, setLoading] = useState(true)
 
@@ -35,23 +44,23 @@ export default function EmployeeReportView() {
   const [pipe, setPipe] = useState<EmployeePipelineReportSummary | null>(null)
 
   useEffect(() => {
-    if (!user?.id) return
+    if (!targetUserId) return
     setLoading(true)
     
     Promise.all([
-      reportsApi.getEmployeeWork(user.id, { preset }),
-      reportsApi.getEmployeePerformance(user.id, { preset }),
-      reportsApi.getEmployeePipeline(user.id)
+      reportsApi.getEmployeeWork(targetUserId, { preset }),
+      reportsApi.getEmployeePerformance(targetUserId, { preset }),
+      reportsApi.getEmployeePipeline(targetUserId)
     ]).then(([w, p, pi]) => {
       setWork(w)
       setPerf(p)
       setPipe(pi)
     }).catch(() => {
-      toast.error('Failed to load your personal analytics')
+      toast.error('Failed to load personal analytics')
     }).finally(() => {
       setLoading(false)
     })
-  }, [user?.id, preset])
+  }, [targetUserId, preset])
 
   if (loading) {
     return (
@@ -60,7 +69,7 @@ export default function EmployeeReportView() {
           <Loader2 className="w-12 h-12 animate-spin text-primary-olive opacity-20" />
           <Activity className="w-6 h-6 text-primary-olive absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-olive/60 animate-pulse">Synchronizing Personal Intelligence</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-olive/60 animate-pulse">Synchronizing Intelligence</p>
       </div>
     )
   }
@@ -69,35 +78,36 @@ export default function EmployeeReportView() {
     <div className="animate-fade-in pb-20 space-y-12 max-w-[1400px] mx-auto">
       
       {/* ── Minimalist Toolbar ────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-2xl bg-primary-olive/10 flex items-center justify-center text-primary-olive">
-            <Fingerprint size={20} />
+      {!hideToolbar && (
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-primary-olive/10 flex items-center justify-center text-primary-olive">
+              <Fingerprint size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-primary-olive uppercase tracking-[0.2em] mb-0.5">Analytic Dossier</p>
+              <p className="text-sm font-bold text-text-dark">{targetUserName} — {preset.replace('_', ' ')}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-[10px] font-black text-primary-olive uppercase tracking-[0.2em] mb-0.5">Analytic Dossier</p>
-            <p className="text-sm font-bold text-text-dark">{user?.name} — {preset.replace('_', ' ')}</p>
+
+          <div className="flex items-center gap-1 p-1 bg-slate-100/50 backdrop-blur-md rounded-2xl border border-slate-200/50">
+            {PRESETS.map(p => (
+              <button 
+                key={p.id} 
+                onClick={() => setPreset(p.id)} 
+                className={cn(
+                  "px-5 py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all duration-300", 
+                  preset === p.id 
+                    ? "bg-white text-primary-olive shadow-sm ring-1 ring-black/5" 
+                    : "text-text-light hover:text-text-dark"
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
           </div>
         </div>
-
-        <div className="flex items-center gap-1 p-1 bg-slate-100/50 backdrop-blur-md rounded-2xl border border-slate-200/50">
-          {PRESETS.map(p => (
-            <button 
-              key={p.id} 
-              onClick={() => setPreset(p.id)} 
-              className={cn(
-                "px-5 py-2 text-[9px] font-black uppercase tracking-widest rounded-xl transition-all duration-300", 
-                preset === p.id 
-                  ? "bg-white text-primary-olive shadow-sm ring-1 ring-black/5" 
-                  : "text-text-light hover:text-text-dark"
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
+      )}
       {/* ── Intelligence Grid (No Cards) ───────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         

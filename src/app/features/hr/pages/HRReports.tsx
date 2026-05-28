@@ -1,7 +1,5 @@
-import EmployeeReportView from '@/shared/components/reports/EmployeeReportView'
+import ReportDashboard from '@/shared/components/reports/ReportDashboard'
 
 export default function HRReports() {
-  return <EmployeeReportView />
+  return <ReportDashboard />
 }
-
-
