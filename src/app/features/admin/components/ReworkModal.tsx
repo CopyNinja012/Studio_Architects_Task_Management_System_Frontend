@@ -50,7 +50,7 @@ export function ReworkModal({ task, onClose, onSubmit }: ReworkModalProps) {
           </p>
         </div>
         <div>
-          <label className="text-[11px] font-black text-[#9CA3AF] uppercase tracking-widest block mb-2 px-1">
+          <label className="text-[11px] font-black text-text-light uppercase tracking-widest block mb-2 px-1">
             Critical Feedback <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -58,11 +58,11 @@ export function ReworkModal({ task, onClose, onSubmit }: ReworkModalProps) {
             onChange={e => setNote(e.target.value)} 
             rows={4}
             placeholder="Describe specifically what needs to be revised…"
-            className="w-full rounded-[24px] border border-[#E5E7EB] bg-white px-4 py-3 text-[14px] text-[#111827] placeholder:text-[#9CA3AF] resize-none focus:outline-none focus:ring-4 focus:ring-primary-olive/5 focus:border-primary-olive transition-all font-medium shadow-sm"
+            className="w-full rounded-3xl border border-[#E5E7EB] bg-white px-4 py-3 text-[14px] text-[#111827] placeholder:text-text-light resize-none focus:outline-none focus:ring-4 focus:ring-primary-olive/5 focus:border-primary-olive transition-all font-medium shadow-sm"
           />
           <div className="flex justify-between items-center mt-2 px-1">
-            <p className="text-[10px] text-[#9CA3AF] font-bold uppercase tracking-tighter italic">Required field</p>
-            <p className="text-[10px] text-[#9CA3AF] font-black uppercase tracking-tighter">{note.length} characters</p>
+            <p className="text-[10px] text-text-light font-bold uppercase tracking-tighter italic">Required field</p>
+            <p className="text-[10px] text-text-light font-black uppercase tracking-tighter">{note.length} characters</p>
           </div>
         </div>
       </div>

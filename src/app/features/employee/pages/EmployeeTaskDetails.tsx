@@ -268,21 +268,25 @@ export default function EmployeeTaskDetails() {
     setTimerState(newState); saveTimer(task.id, newState); setShowSubmit(true)
   }
 
-  const handleFilePreview = (file: TaskAttachmentResponse) => {
+  const handleFilePreview = async (file: TaskAttachmentResponse) => {
     if (!task) return
     
-    // Get current token from auth store for authenticated direct access
-    const token = useAuthStore.getState().user?.token
-    const directUrl = taskApi.getAttachmentUrl(task.id, file.id, token)
+    try {
+      // Fetch blob via apiClient (authorized)
+      const blob = await taskApi.getAttachmentBlob(task.id, file.id)
+      const url = window.URL.createObjectURL(blob)
+      
+      // For images and PDFs, we open the blob URL in a new tab
+      if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
+        window.open(url, '_blank')
+        return
+      }
 
-    // For images and PDFs, we open the direct URL in a new tab (backend sends inline disposition)
-    if (file.fileType.startsWith('image/') || file.fileType === 'application/pdf') {
-      window.open(directUrl, '_blank')
-      return
+      // For other files, use the preview modal with the authorized blob URL
+      setPreviewFile({ url, name: file.fileName, type: file.fileType })
+    } catch (err) {
+      toast.error('Failed to load file preview')
     }
-
-    // For other files, use the preview modal with the direct authenticated URL
-    setPreviewFile({ url: directUrl, name: file.fileName, type: file.fileType })
   }
 
   if (loading || !task) {

@@ -126,30 +126,33 @@ export const taskApi = {
     })
     return res.data
   },
-
   downloadAttachment: async (taskId: string, attachmentId: string): Promise<void> => {
     const res = await apiClient.get(`${BASE}/${taskId}/attachments/${attachmentId}/download`, {
       responseType: 'blob'
     })
-    
+
     // Trigger browser download
-    const url = window.URL.createObjectURL(new Blob([res.data]))
+    const contentType = res.headers['content-type']
+    const blob = new Blob([res.data], { 
+      type: typeof contentType === 'string' ? contentType : 'application/octet-stream' 
+    })
+    const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    
+
     // Extract filename from header if possible, or use a default
     const disposition = res.headers['content-disposition']
     let fileName = 'attachment'
-    if (disposition && disposition.indexOf('filename=') !== -1) {
+    if (typeof disposition === 'string' && disposition.indexOf('filename=') !== -1) {
       const match = disposition.match(/filename="?([^"]+)"?/)
       if (match) fileName = match[1]
     }
-    
+
     link.setAttribute('download', fileName)
     document.body.appendChild(link)
     link.click()
     link.remove()
-    window.URL.revokeObjectURL(url)
+    setTimeout(() => window.URL.revokeObjectURL(url), 100)
   },
 
   // ── Timeline ───────────────────────────────────────────────────────────────
